@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--primary); /* Canvas / Page background */
+  --color-secondary: var(--secondary); /* Cards / elevated containers */
+  --color-tertiary: var(--tertiary); /* Brand accent (Golden Toasted Murmura) */
+  --color-border: var(--border-color); /* Subtle dividers & card borders */
+  --color-muted: var(--muted); /* Secondary / placeholder text */
+  --color-surface: var(--surface); /* Inputs & inner pill backgrounds */
+}
+
+/* Light Theme (Crisp Puffed Rice & Warm Ivory) */
+:root {
+  --primary: #faf8f5; /* Warm puffed rice cream */
+  --secondary: #ffffff; /* Clean card surface */
+  --tertiary: #d97706; /* Warm roasted golden amber / turmeric honey */
+  --border-color: #e8e2d8; /* Soft toasted grain border */
+  --muted: #78716c; /* Warm stone gray */
+  --surface: #f4efe6; /* Inset warm puffed rice surface */
+}
+
+/* Dark Theme (Roasted Earthen Hearth & Golden Glow) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #12100e; /* Warm roasted night / dark earthen charcoal */
+    --secondary: #1c1917; /* Warm stone-900 card surface */
+    --tertiary: #f59e0b; /* Glowing golden toasted grain */
+    --border-color: #2e2824; /* Subtle roasted grain border */
+    --muted: #a8a29e; /* Warm stone muted text */
+    --surface: #161311; /* Deep roasted inset surface */
+  }
+}
+
+/* Manual Theme Class Overrides */
+.dark {
+  --primary: #12100e;
+  --secondary: #1c1917;
+  --tertiary: #f59e0b;
+  --border-color: #2e2824;
+  --muted: #a8a29e;
+  --surface: #161311;
+}
+
+.light {
+  --primary: #faf8f5;
+  --secondary: #ffffff;
+  --tertiary: #d97706;
+  --border-color: #e8e2d8;
+  --muted: #78716c;
+  --surface: #f4efe6;
+}
