@@ -10,6 +10,28 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] }),
     tailwindcss(),
   ],
+  build: {
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            {
+              name: "react-vendor",
+              test: /[\\/]node_modules[\\/](react|react-dom|react-router)[\\/]/,
+            },
+            {
+              name: "crypto-vendor",
+              test: /[\\/]node_modules[\\/](@scure|@noble)[\\/]/,
+            },
+            {
+              name: "p2p-vendor",
+              test: /[\\/]node_modules[\\/](trystero|dexie|dexie-react-hooks)[\\/]/,
+            },
+          ],
+        },
+      },
+    },
+  },
   server: {
     port: 3000,
     open: true,
