@@ -13,7 +13,10 @@ import {
   MessageSquare,
   PanelRightClose,
   ChevronDown,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
+
 import { useChatStore } from "../store/chatStore";
 import { useAuthStore } from "../../auth/store/authStore";
 import { getAvatarById } from "../../auth/utils/avatars";
@@ -87,6 +90,70 @@ export const ChatRoom: React.FC = () => {
     await toggleVideo();
   };
 
+  // Fullscreen / Google Meet mode states
+  const [isMeetMode, setIsMeetMode] = useState<boolean | null>(null);
+  const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
+
+  // Sync with browser native fullscreen
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      const isDocFullscreen = Boolean(document.fullscreenElement);
+      setIsNativeFullscreen(isDocFullscreen);
+      if (isDocFullscreen) {
+        setIsMeetMode(true);
+      }
+    };
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
+    };
+  }, []);
+
+  // Clean up native fullscreen on unmount
+  useEffect(() => {
+    return () => {
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+    };
+  }, []);
+
+  // When video is active, default to full-screen Meet mode unless user explicitly toggled
+  const isFullscreenActive =
+    isNativeFullscreen || (isMeetMode !== null ? isMeetMode : hasActiveVideo);
+
+  const handleToggleFullscreen = async () => {
+    const targetState = !isFullscreenActive;
+    try {
+      if (targetState) {
+        if (
+          !document.fullscreenElement &&
+          document.documentElement.requestFullscreen
+        ) {
+          await document.documentElement.requestFullscreen();
+        }
+      } else {
+        if (document.fullscreenElement && document.exitFullscreen) {
+          await document.exitFullscreen();
+        }
+      }
+    } catch (err) {
+      console.warn("Fullscreen API error:", err);
+    }
+    setIsMeetMode(targetState);
+  };
+
+  const handleLeaveRoom = async () => {
+    if (document.fullscreenElement && document.exitFullscreen) {
+      try {
+        await document.exitFullscreen();
+      } catch {
+        // ignore
+      }
+    }
+    leaveRoom();
+  };
+
   // Auto scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -114,8 +181,12 @@ export const ChatRoom: React.FC = () => {
 
   return (
     <div
-      className={`w-full mx-auto flex flex-col h-[calc(100vh-6rem)] max-h-[850px] bg-secondary border border-border rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 ${
-        hasActiveVideo ? "max-w-7xl" : "max-w-4xl"
+      className={`transition-all duration-300 ${
+        isFullscreenActive
+          ? "fixed inset-0 z-50 flex flex-col bg-primary text-foreground w-screen h-screen overflow-hidden"
+          : `w-full mx-auto flex flex-col h-[calc(100vh-6rem)] max-h-[850px] bg-secondary border border-border rounded-3xl shadow-2xl overflow-hidden ${
+              hasActiveVideo ? "max-w-7xl" : "max-w-4xl"
+            }`
       }`}
     >
       {/* Top Room Header */}
@@ -123,7 +194,7 @@ export const ChatRoom: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={leaveRoom}
+            onClick={handleLeaveRoom}
             className="p-2 rounded-xl text-muted hover:text-foreground hover:bg-surface border border-transparent hover:border-border transition-colors cursor-pointer"
             title="Leave room"
           >
@@ -251,9 +322,31 @@ export const ChatRoom: React.FC = () => {
             )}
           </button>
 
+          {/* Fullscreen Toggle (Google Meet Style) */}
           <button
             type="button"
-            onClick={leaveRoom}
+            onClick={handleToggleFullscreen}
+            className={`p-2 rounded-xl border transition-colors cursor-pointer ${
+              isFullscreenActive
+                ? "bg-tertiary/15 text-tertiary border-tertiary/40"
+                : "bg-surface/80 text-muted hover:text-foreground border-border hover:border-border/80"
+            }`}
+            title={
+              isFullscreenActive
+                ? "Exit full screen (Google Meet)"
+                : "Full screen (Google Meet)"
+            }
+          >
+            {isFullscreenActive ? (
+              <Minimize2 className="w-4 h-4" />
+            ) : (
+              <Maximize2 className="w-4 h-4" />
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleLeaveRoom}
             className="hidden sm:flex items-center gap-1.5 py-1.5 px-3 text-xs text-muted hover:text-destructive border border-border hover:border-destructive/40 rounded-xl transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
@@ -278,6 +371,9 @@ export const ChatRoom: React.FC = () => {
               isChatOpen={isChatOpen}
               onToggleChat={handleToggleChat}
               unreadCount={unreadCount}
+              isFullscreen={isFullscreenActive}
+              onToggleFullscreen={handleToggleFullscreen}
+              onLeaveRoom={handleLeaveRoom}
             />
           </div>
         )}
