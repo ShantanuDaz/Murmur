@@ -31,7 +31,13 @@ export const StepWelcome = ({
           <span>Serverless P2P Space</span>
         </div>
 
-        <div className="text-4xl select-none pt-1">🍿</div>
+        <div className="pt-2 flex justify-center">
+          <img
+            src="/logo.svg"
+            alt="Murmur Logo"
+            className="w-16 h-16 drop-shadow-lg hover:scale-110 transition-transform cursor-pointer select-none"
+          />
+        </div>
 
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center justify-center gap-1.5">
           <span>Welcome to Murmur</span>

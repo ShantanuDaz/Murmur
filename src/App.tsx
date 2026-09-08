@@ -31,7 +31,11 @@ function App() {
       {/* Top Navbar */}
       <header className="border-b border-border bg-secondary/90 backdrop-blur-md px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-3">
-          <div className="text-2xl">🍿</div>
+          <img
+            src="/logo.svg"
+            alt="Murmur Logo"
+            className="w-8 h-8 drop-shadow hover:scale-105 transition-transform select-none"
+          />
           <div>
             <h1 className="text-sm font-bold text-white leading-tight">
               Murmur
