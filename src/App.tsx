@@ -16,6 +16,7 @@ import { getAvatarById } from "./features/auth/utils/avatars";
 import { RoomLobby } from "./features/chat/components/RoomLobby";
 import { ChatRoom } from "./features/chat/components/ChatRoom";
 import { ThemeToggle } from "./components/ThemeToggle";
+import { InstallButton } from "./components/pwa/InstallButton";
 import "./App.css";
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          <InstallButton />
           <ThemeToggle />
 
           {profile && (

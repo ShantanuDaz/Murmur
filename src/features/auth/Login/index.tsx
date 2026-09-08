@@ -12,6 +12,7 @@ import { StepProfile } from "./components/StepProfile";
 import { StepIdentity } from "./components/StepIdentity";
 import { StepImport } from "./components/StepImport";
 import { ThemeToggle } from "../../../components/ThemeToggle";
+import { InstallButton } from "../../../components/pwa/InstallButton";
 
 type Step = 1 | 2 | 3 | "import";
 
@@ -141,8 +142,9 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-primary text-foreground flex items-center justify-center p-3 sm:p-6 selection:bg-tertiary/30 selection:text-tertiary transition-colors relative">
-      {/* Theme toggle in top right */}
-      <div className="fixed top-4 right-4 z-50">
+      {/* Action buttons in top right */}
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+        <InstallButton />
         <ThemeToggle />
       </div>
 

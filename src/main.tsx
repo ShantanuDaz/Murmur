@@ -8,6 +8,8 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import Login from "./features/auth/Login";
 import { useAuthStore } from "./features/auth/store/authStore";
 
+import { ReloadPrompt } from "./components/pwa/ReloadPrompt";
+
 // Initialize auth state from IndexedDB early on application boot
 useAuthStore.getState().initialize();
 const router = createBrowserRouter([
@@ -25,5 +27,6 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <RouterProvider router={router} />
+    <ReloadPrompt />
   </StrictMode>,
 );
