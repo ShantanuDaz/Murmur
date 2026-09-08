@@ -66,7 +66,7 @@ export const ChatRoom: React.FC = () => {
           <button
             type="button"
             onClick={leaveRoom}
-            className="p-2 rounded-xl text-muted hover:text-white hover:bg-surface border border-transparent hover:border-border transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-muted hover:text-foreground hover:bg-surface border border-transparent hover:border-border transition-colors cursor-pointer"
             title="Leave room"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -74,7 +74,7 @@ export const ChatRoom: React.FC = () => {
 
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-bold text-white font-mono flex items-center gap-1.5">
+              <h2 className="text-base font-bold text-foreground font-mono flex items-center gap-1.5">
                 <span className="text-tertiary">#</span>
                 <span>{activeRoomId}</span>
               </h2>
@@ -86,7 +86,7 @@ export const ChatRoom: React.FC = () => {
                 title="Copy room name"
               >
                 {copied ? (
-                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <Check className="w-3.5 h-3.5 text-success" />
                 ) : (
                   <Copy className="w-3.5 h-3.5" />
                 )}
@@ -97,15 +97,15 @@ export const ChatRoom: React.FC = () => {
             <div className="flex items-center gap-1.5 text-[11px] text-muted">
               {status === "connecting" ? (
                 <>
-                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-                  <span className="text-amber-400">
+                  <span className="w-2 h-2 rounded-full bg-warning animate-ping" />
+                  <span className="text-warning">
                     Discovering peers via Nostr...
                   </span>
                 </>
               ) : (
                 <>
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span className="text-emerald-400 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-success" />
+                  <span className="text-success font-medium">
                     P2P Mesh Active
                   </span>
                   <span>&bull;</span>
@@ -120,7 +120,7 @@ export const ChatRoom: React.FC = () => {
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="flex items-center gap-2 bg-surface/80 border border-border rounded-full py-1.5 px-3">
             <Users className="w-3.5 h-3.5 text-tertiary" />
-            <span className="text-xs font-medium text-slate-200">
+            <span className="text-xs font-medium text-foreground-secondary">
               {peerCount === 0
                 ? "Waiting for peers"
                 : `${peerCount} ${peerCount === 1 ? "peer" : "peers"} connected`}
@@ -148,7 +148,7 @@ export const ChatRoom: React.FC = () => {
           <button
             type="button"
             onClick={leaveRoom}
-            className="hidden sm:flex items-center gap-1.5 py-1.5 px-3 text-xs text-muted hover:text-red-400 border border-border hover:border-red-900/50 rounded-xl transition-colors cursor-pointer"
+            className="hidden sm:flex items-center gap-1.5 py-1.5 px-3 text-xs text-muted hover:text-destructive border border-border hover:border-destructive/40 rounded-xl transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Leave</span>
@@ -206,14 +206,16 @@ export const ChatRoom: React.FC = () => {
               <div
                 className={`max-w-[75%] sm:max-w-[65%] rounded-3xl p-3.5 space-y-1 shadow-md ${
                   isSelf
-                    ? "bg-tertiary text-slate-950 rounded-br-xs"
-                    : "bg-surface border border-border text-slate-100 rounded-bl-xs"
+                    ? "bg-tertiary text-tertiary-foreground rounded-br-xs"
+                    : "bg-surface border border-border text-foreground rounded-bl-xs"
                 }`}
               >
                 {/* Message Header (Name + Key + Time) */}
                 <div
                   className={`flex items-center gap-2 text-[10px] ${
-                    isSelf ? "text-slate-900/80 font-medium" : "text-muted"
+                    isSelf
+                      ? "text-tertiary-foreground/80 font-medium"
+                      : "text-muted"
                   }`}
                 >
                   <span className="font-semibold">{senderName}</span>
@@ -259,13 +261,13 @@ export const ChatRoom: React.FC = () => {
                 ? "Send a message (waiting for peers to join)..."
                 : `Message #${activeRoomId}...`
             }
-            className="flex-1 bg-surface border border-border focus:border-tertiary rounded-2xl py-3 px-4 text-sm text-slate-100 placeholder-muted/60 focus:outline-none transition-colors"
+            className="flex-1 bg-surface border border-border focus:border-tertiary rounded-2xl py-3 px-4 text-sm text-foreground placeholder:text-muted/60 focus:outline-none transition-colors"
           />
 
           <button
             type="submit"
             disabled={!inputText.trim()}
-            className="p-3 rounded-2xl bg-tertiary hover:bg-tertiary/90 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-semibold transition-all shadow-md shadow-tertiary/20 cursor-pointer shrink-0"
+            className="p-3 rounded-2xl bg-tertiary hover:bg-tertiary/90 disabled:opacity-40 disabled:cursor-not-allowed text-tertiary-foreground font-semibold transition-all shadow-md shadow-tertiary/20 cursor-pointer shrink-0"
             title="Send message"
           >
             <Send className="w-4 h-4" />

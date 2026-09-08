@@ -39,7 +39,7 @@ export const StepWelcome = ({
           />
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center justify-center gap-1.5">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground flex items-center justify-center gap-1.5">
           <span>Welcome to Murmur</span>
           <span className="text-tertiary">.</span>
         </h1>
@@ -55,7 +55,7 @@ export const StepWelcome = ({
         <div className="space-y-1.5">
           <label
             htmlFor="welcome-name-input"
-            className="block text-xs font-medium text-slate-300 flex items-center gap-1.5"
+            className="block text-xs font-medium text-foreground-secondary flex items-center gap-1.5"
           >
             <User className="w-3.5 h-3.5 text-tertiary" />
             <span>What should peers call you?</span>
@@ -70,7 +70,7 @@ export const StepWelcome = ({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter your nickname or name (e.g. Alice)"
-            className="w-full bg-surface border border-border focus:border-tertiary focus:ring-1 focus:ring-tertiary rounded-2xl px-4 py-3 text-sm text-slate-100 placeholder:text-muted outline-none transition-colors"
+            className="w-full bg-surface border border-border focus:border-tertiary focus:ring-1 focus:ring-tertiary rounded-2xl px-4 py-3 text-sm text-foreground placeholder:text-muted outline-none transition-colors"
           />
         </div>
 
@@ -79,7 +79,7 @@ export const StepWelcome = ({
           disabled={!name.trim()}
           className={`w-full py-3.5 px-4 rounded-2xl text-sm font-semibold transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 ${
             name.trim()
-              ? "bg-tertiary hover:opacity-90 text-white shadow-tertiary/20 hover:scale-[1.01]"
+              ? "bg-tertiary hover:opacity-90 text-tertiary-foreground shadow-tertiary/20 hover:scale-[1.01]"
               : "bg-surface text-muted border border-border cursor-not-allowed"
           }`}
         >

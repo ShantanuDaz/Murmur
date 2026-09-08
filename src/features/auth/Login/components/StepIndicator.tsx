@@ -23,7 +23,7 @@ export const StepIndicator = ({ currentStep }: StepIndicatorProps) => {
               <div
                 className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-semibold transition-all ${
                   isCompleted
-                    ? "bg-tertiary text-white shadow-sm"
+                    ? "bg-tertiary text-tertiary-foreground shadow-sm"
                     : isActive
                       ? "bg-tertiary/20 text-tertiary border border-tertiary ring-2 ring-tertiary/20"
                       : "bg-surface text-muted border border-border"
@@ -37,7 +37,7 @@ export const StepIndicator = ({ currentStep }: StepIndicatorProps) => {
               </div>
               <span
                 className={`text-xs font-medium transition-colors hidden sm:inline ${
-                  isActive ? "text-slate-100" : "text-muted"
+                  isActive ? "text-foreground" : "text-muted"
                 }`}
               >
                 {s.label}

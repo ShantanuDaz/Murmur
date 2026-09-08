@@ -15,6 +15,7 @@ import { shortenKey } from "./features/auth/utils/crypto";
 import { getAvatarById } from "./features/auth/utils/avatars";
 import { RoomLobby } from "./features/chat/components/RoomLobby";
 import { ChatRoom } from "./features/chat/components/ChatRoom";
+import { ThemeToggle } from "./components/ThemeToggle";
 import "./App.css";
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
   const avatar = getAvatarById(profile?.avatar);
 
   return (
-    <div className="min-h-screen bg-primary text-slate-100 flex flex-col transition-colors">
+    <div className="min-h-screen bg-primary text-foreground flex flex-col transition-colors">
       {/* Top Navbar */}
       <header className="border-b border-border bg-secondary/90 backdrop-blur-md px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-3">
@@ -37,7 +38,7 @@ function App() {
             className="w-8 h-8 drop-shadow hover:scale-105 transition-transform select-none"
           />
           <div>
-            <h1 className="text-sm font-bold text-white leading-tight">
+            <h1 className="text-sm font-bold text-foreground leading-tight">
               Murmur
             </h1>
             <p className="text-[11px] text-tertiary font-mono flex items-center gap-1">
@@ -47,34 +48,38 @@ function App() {
           </div>
         </div>
 
-        {profile && (
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2.5 bg-surface border border-border rounded-full py-1.5 px-3">
-              <div
-                className={`w-7 h-7 rounded-full bg-gradient-to-br ${avatar.bgGradient} flex items-center justify-center text-sm shadow`}
-              >
-                {avatar.emoji}
-              </div>
-              <div className="text-left hidden sm:block">
-                <div className="text-xs font-semibold text-slate-200 leading-tight">
-                  {profile.name}
-                </div>
-                <div className="text-[10px] text-muted font-mono">
-                  {shortId}
-                </div>
-              </div>
-            </div>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <ThemeToggle />
 
-            <button
-              type="button"
-              onClick={() => logout()}
-              className="py-1.5 px-3 text-xs text-muted hover:text-red-400 border border-border hover:border-red-900/50 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Log Out</span>
-            </button>
-          </div>
-        )}
+          {profile && (
+            <>
+              <div className="flex items-center gap-2.5 bg-surface border border-border rounded-full py-1.5 px-3">
+                <div
+                  className={`w-7 h-7 rounded-full bg-gradient-to-br ${avatar.bgGradient} flex items-center justify-center text-sm shadow`}
+                >
+                  {avatar.emoji}
+                </div>
+                <div className="text-left hidden sm:block">
+                  <div className="text-xs font-semibold text-foreground leading-tight">
+                    {profile.name}
+                  </div>
+                  <div className="text-[10px] text-muted font-mono">
+                    {shortId}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => logout()}
+                className="py-1.5 px-3 text-xs text-muted hover:text-destructive border border-border hover:border-destructive/40 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Log Out</span>
+              </button>
+            </>
+          )}
+        </div>
       </header>
 
       {/* Main Container */}
@@ -91,7 +96,7 @@ function App() {
               <button
                 type="button"
                 onClick={() => setShowIdentityDetails((prev) => !prev)}
-                className="w-full flex items-center justify-between text-left text-xs font-semibold text-muted hover:text-slate-200 transition-colors cursor-pointer"
+                className="w-full flex items-center justify-between text-left text-xs font-semibold text-muted hover:text-foreground transition-colors cursor-pointer"
               >
                 <div className="flex items-center gap-2">
                   <Key className="w-4 h-4 text-tertiary" />
@@ -113,7 +118,7 @@ function App() {
                       {avatar.emoji}
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-white">
+                      <h3 className="text-sm font-bold text-foreground">
                         {profile?.name}
                       </h3>
                       {profile?.bio && (
@@ -142,10 +147,10 @@ function App() {
 
                   <div className="bg-surface p-3 rounded-xl border border-border text-left space-y-1 text-xs">
                     <div className="text-muted font-medium flex items-center gap-1.5">
-                      <Shield className="w-3.5 h-3.5 text-cyan-400" />
+                      <Shield className="w-3.5 h-3.5 text-accent-info" />
                       <span>Encryption Key (X25519)</span>
                     </div>
-                    <div className="font-mono text-[11px] text-cyan-400 break-all select-all">
+                    <div className="font-mono text-[11px] text-accent-info break-all select-all">
                       {profile?.encryptionKey}
                     </div>
                   </div>

@@ -156,7 +156,7 @@ export const StepImport = ({
           <KeyRound className="w-3.5 h-3.5" />
           <span>Restore Account</span>
         </div>
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
+        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
           Import Your Murmur Identity
         </h2>
         <p className="text-xs sm:text-sm text-muted">
@@ -179,7 +179,9 @@ export const StepImport = ({
             <div className="flex items-center gap-2.5 text-xs">
               <FileCode className="w-4 h-4 text-tertiary shrink-0" />
               <div>
-                <p className="font-semibold text-slate-200">{loadedFileName}</p>
+                <p className="font-semibold text-foreground">
+                  {loadedFileName}
+                </p>
                 <p className="text-[11px] text-tertiary">
                   Backup data loaded successfully ✓
                 </p>
@@ -188,7 +190,7 @@ export const StepImport = ({
             <button
               type="button"
               onClick={clearLoadedFile}
-              className="text-muted hover:text-red-400 p-1 rounded-lg transition-colors cursor-pointer"
+              className="text-muted hover:text-destructive p-1 rounded-lg transition-colors cursor-pointer"
               title="Remove file"
             >
               <X className="w-4 h-4" />
@@ -203,7 +205,7 @@ export const StepImport = ({
             <div className="w-8 h-8 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center group-hover:scale-110 transition-transform">
               <Upload className="w-4 h-4" />
             </div>
-            <div className="text-xs font-semibold text-slate-200">
+            <div className="text-xs font-semibold text-foreground">
               Upload JSON Backup File
             </div>
             <div className="text-[11px] text-muted">
@@ -228,7 +230,7 @@ export const StepImport = ({
         <div className="space-y-1.5">
           <label
             htmlFor="import-name-input"
-            className="block text-xs font-medium text-slate-300 flex items-center gap-1.5"
+            className="block text-xs font-medium text-foreground-secondary flex items-center gap-1.5"
           >
             <User className="w-3.5 h-3.5 text-tertiary" />
             <span>Display Name</span>
@@ -242,7 +244,7 @@ export const StepImport = ({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Your name or handle..."
-            className="w-full bg-surface border border-border focus:border-tertiary focus:ring-1 focus:ring-tertiary rounded-2xl px-4 py-2.5 text-sm text-slate-100 placeholder:text-muted outline-none transition-colors"
+            className="w-full bg-surface border border-border focus:border-tertiary focus:ring-1 focus:ring-tertiary rounded-2xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted outline-none transition-colors"
           />
         </div>
 
@@ -250,7 +252,7 @@ export const StepImport = ({
         <div className="space-y-1.5">
           <label
             htmlFor="import-words-textarea"
-            className="block text-xs font-medium text-slate-300"
+            className="block text-xs font-medium text-foreground-secondary"
           >
             24 Words{" "}
             <span className="text-muted font-normal">
@@ -263,11 +265,11 @@ export const StepImport = ({
             value={words}
             onChange={(e) => handleWordsChange(e.target.value)}
             placeholder="word1 word2 word3 ... word24"
-            className="w-full bg-surface border border-border focus:border-tertiary focus:ring-1 focus:ring-tertiary rounded-2xl p-3.5 text-xs font-mono text-slate-200 placeholder:text-muted outline-none resize-none transition-colors leading-relaxed"
+            className="w-full bg-surface border border-border focus:border-tertiary focus:ring-1 focus:ring-tertiary rounded-2xl p-3.5 text-xs font-mono text-foreground placeholder:text-muted outline-none resize-none transition-colors leading-relaxed"
           />
 
           {error && (
-            <p className="text-xs text-amber-400 flex items-center gap-1.5 pt-0.5">
+            <p className="text-xs text-warning flex items-center gap-1.5 pt-0.5">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{error}</span>
             </p>
@@ -286,7 +288,7 @@ export const StepImport = ({
           <button
             type="button"
             onClick={onBack}
-            className="w-1/3 py-3 px-4 rounded-2xl text-xs sm:text-sm font-medium border border-border bg-surface hover:bg-secondary text-slate-300 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+            className="w-1/3 py-3 px-4 rounded-2xl text-xs sm:text-sm font-medium border border-border bg-surface hover:bg-secondary text-foreground-secondary hover:text-foreground transition-colors cursor-pointer flex items-center justify-center gap-1.5"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back</span>
@@ -297,7 +299,7 @@ export const StepImport = ({
             disabled={!isValid || isSubmitting}
             className={`w-2/3 py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 ${
               isValid && !isSubmitting
-                ? "bg-tertiary hover:opacity-90 text-white shadow-tertiary/20 hover:scale-[1.01]"
+                ? "bg-tertiary hover:opacity-90 text-tertiary-foreground shadow-tertiary/20 hover:scale-[1.01]"
                 : "bg-surface text-muted border border-border cursor-not-allowed"
             }`}
           >

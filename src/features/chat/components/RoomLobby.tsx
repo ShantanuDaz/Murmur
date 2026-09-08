@@ -73,7 +73,7 @@ export const RoomLobby: React.FC = () => {
             <Radio className="w-5 h-5 animate-pulse" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white tracking-tight">
+            <h2 className="text-xl font-bold text-foreground tracking-tight">
               P2P Room Connect
             </h2>
             <p className="text-xs text-muted">
@@ -86,7 +86,7 @@ export const RoomLobby: React.FC = () => {
           <div>
             <label
               htmlFor="room-name-input"
-              className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
+              className="block text-xs font-semibold text-foreground-secondary uppercase tracking-wider mb-2"
             >
               Room Identifier
             </label>
@@ -100,7 +100,7 @@ export const RoomLobby: React.FC = () => {
                 value={roomInput}
                 onChange={(e) => setRoomInput(e.target.value)}
                 placeholder="enter-room-name (e.g. rooftop-cafe)"
-                className="w-full bg-surface border border-border focus:border-tertiary rounded-2xl py-3 pl-10 pr-24 text-sm text-slate-100 placeholder-muted/60 focus:outline-none transition-colors font-mono"
+                className="w-full bg-surface border border-border focus:border-tertiary rounded-2xl py-3 pl-10 pr-24 text-sm text-foreground placeholder-muted/60 focus:outline-none transition-colors font-mono"
                 autoFocus
               />
               <button
@@ -138,7 +138,7 @@ export const RoomLobby: React.FC = () => {
           <button
             type="submit"
             disabled={!roomInput.trim()}
-            className="w-full mt-2 py-3.5 px-5 rounded-2xl bg-tertiary hover:bg-tertiary/90 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-bold text-sm shadow-lg shadow-tertiary/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="w-full mt-2 py-3.5 px-5 rounded-2xl bg-tertiary hover:bg-tertiary/90 disabled:opacity-40 disabled:cursor-not-allowed text-tertiary-foreground font-bold text-sm shadow-lg shadow-tertiary/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <span>Enter Room</span>
             <ArrowRight className="w-4 h-4" />
@@ -148,8 +148,8 @@ export const RoomLobby: React.FC = () => {
         {/* Informational badges */}
         <div className="grid grid-cols-3 gap-2.5 mt-6 pt-6 border-t border-border/80">
           <div className="p-2.5 rounded-xl bg-surface/50 border border-border/60 text-left">
-            <Shield className="w-4 h-4 text-emerald-400 mb-1" />
-            <div className="text-[11px] font-semibold text-slate-200">
+            <Shield className="w-4 h-4 text-success mb-1" />
+            <div className="text-[11px] font-semibold text-foreground">
               Zero Server
             </div>
             <div className="text-[10px] text-muted">
@@ -158,8 +158,8 @@ export const RoomLobby: React.FC = () => {
           </div>
 
           <div className="p-2.5 rounded-xl bg-surface/50 border border-border/60 text-left">
-            <Zap className="w-4 h-4 text-amber-400 mb-1" />
-            <div className="text-[11px] font-semibold text-slate-200">
+            <Zap className="w-4 h-4 text-warning mb-1" />
+            <div className="text-[11px] font-semibold text-foreground">
               Direct WebRTC
             </div>
             <div className="text-[10px] text-muted">
@@ -168,8 +168,8 @@ export const RoomLobby: React.FC = () => {
           </div>
 
           <div className="p-2.5 rounded-xl bg-surface/50 border border-border/60 text-left">
-            <Sparkles className="w-4 h-4 text-cyan-400 mb-1" />
-            <div className="text-[11px] font-semibold text-slate-200">
+            <Sparkles className="w-4 h-4 text-accent-info mb-1" />
+            <div className="text-[11px] font-semibold text-foreground">
               RAM-Only
             </div>
             <div className="text-[10px] text-muted">

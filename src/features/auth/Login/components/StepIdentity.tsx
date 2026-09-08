@@ -93,16 +93,16 @@ export const StepIdentity = ({
           <ShieldCheck className="w-3.5 h-3.5" />
           <span>Step 3 of 3: Master Key</span>
         </div>
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
+        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
           Your 24-Word Recovery Phrase
         </h2>
       </div>
 
       {/* Simple P2P Educational Callout */}
-      <div className="bg-surface/80 border border-border p-3.5 rounded-2xl flex items-start gap-3 text-xs leading-relaxed text-slate-300">
+      <div className="bg-surface/80 border border-border p-3.5 rounded-2xl flex items-start gap-3 text-xs leading-relaxed text-foreground-secondary">
         <Info className="w-4 h-4 text-tertiary shrink-0 mt-0.5" />
         <div>
-          <p className="font-semibold text-slate-200">
+          <p className="font-semibold text-foreground">
             Why are these 24 words needed?
           </p>
           <p className="text-muted mt-0.5">
@@ -123,7 +123,7 @@ export const StepIdentity = ({
             <button
               type="button"
               onClick={() => setIsPhraseBlurred(!isPhraseBlurred)}
-              className="text-xs text-muted hover:text-slate-200 transition-colors cursor-pointer flex items-center gap-1"
+              className="text-xs text-muted hover:text-foreground transition-colors cursor-pointer flex items-center gap-1"
             >
               {isPhraseBlurred ? (
                 <Eye className="w-3.5 h-3.5" />
@@ -161,7 +161,7 @@ export const StepIdentity = ({
               <span className="text-muted select-none w-4 text-right font-mono">
                 {idx + 1}.
               </span>
-              <span className="font-mono font-medium text-slate-200 truncate">
+              <span className="font-mono font-medium text-foreground truncate">
                 {word}
               </span>
             </div>
@@ -187,7 +187,7 @@ export const StepIdentity = ({
         <button
           type="button"
           onClick={handleDownloadBackup}
-          className="py-2.5 px-3 rounded-xl border border-border bg-surface hover:bg-secondary text-slate-200 text-xs font-medium transition-all cursor-pointer flex items-center justify-center gap-2 hover:border-tertiary/40"
+          className="py-2.5 px-3 rounded-xl border border-border bg-surface hover:bg-secondary text-foreground text-xs font-medium transition-all cursor-pointer flex items-center justify-center gap-2 hover:border-tertiary/40"
         >
           {hasDownloaded ? (
             <>
@@ -205,7 +205,7 @@ export const StepIdentity = ({
         <button
           type="button"
           onClick={() => copyWords(keyring.mnemonic)}
-          className="py-2.5 px-3 rounded-xl border border-border bg-surface hover:bg-secondary text-slate-200 text-xs font-medium transition-all cursor-pointer flex items-center justify-center gap-2 hover:border-tertiary/40"
+          className="py-2.5 px-3 rounded-xl border border-border bg-surface hover:bg-secondary text-foreground text-xs font-medium transition-all cursor-pointer flex items-center justify-center gap-2 hover:border-tertiary/40"
         >
           {wordsCopied ? (
             <>
@@ -222,7 +222,7 @@ export const StepIdentity = ({
       </div>
 
       {/* Backup Confirmation Checkbox */}
-      <label className="flex items-start gap-2.5 text-xs text-slate-300 bg-tertiary/10 border border-tertiary/20 p-3 rounded-xl cursor-pointer hover:bg-tertiary/15 transition-colors">
+      <label className="flex items-start gap-2.5 text-xs text-foreground-secondary bg-tertiary/10 border border-tertiary/20 p-3 rounded-xl cursor-pointer hover:bg-tertiary/15 transition-colors">
         <input
           type="checkbox"
           checked={hasBackedUp}
@@ -244,7 +244,7 @@ export const StepIdentity = ({
             setHasBackedUp(false);
             setHasDownloaded(false);
           }}
-          className="text-[11px] text-muted hover:text-slate-200 transition-colors cursor-pointer flex items-center gap-1.5"
+          className="text-[11px] text-muted hover:text-foreground transition-colors cursor-pointer flex items-center gap-1.5"
         >
           <RefreshCw className="w-3 h-3" />
           <span>Generate different seed phrase</span>
@@ -256,7 +256,7 @@ export const StepIdentity = ({
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="w-full flex items-center justify-between px-4 py-2 text-xs text-muted hover:text-slate-200 hover:bg-surface transition-colors cursor-pointer"
+          className="w-full flex items-center justify-between px-4 py-2 text-xs text-muted hover:text-foreground hover:bg-surface transition-colors cursor-pointer"
         >
           <span className="flex items-center gap-2 font-medium">
             <Lock className="w-3.5 h-3.5 text-tertiary" />
@@ -306,7 +306,7 @@ export const StepIdentity = ({
                 <button
                   type="button"
                   onClick={() => copyX(keyring.x25519PubHex)}
-                  className="text-cyan-400 hover:underline cursor-pointer inline-flex items-center gap-1"
+                  className="text-accent-info hover:underline cursor-pointer inline-flex items-center gap-1"
                 >
                   {xCopied ? (
                     <Check className="w-3 h-3" />
@@ -316,7 +316,7 @@ export const StepIdentity = ({
                   <span>{xCopied ? "Copied" : "Copy"}</span>
                 </button>
               </div>
-              <div className="font-mono text-[10px] text-cyan-400 bg-surface p-2 rounded-lg border border-border break-all select-all">
+              <div className="font-mono text-[10px] text-accent-info bg-surface p-2 rounded-lg border border-border break-all select-all">
                 {keyring.x25519PubHex}
               </div>
             </div>
@@ -330,7 +330,7 @@ export const StepIdentity = ({
           type="button"
           onClick={onBack}
           disabled={isSubmitting}
-          className="w-1/3 py-3 px-4 rounded-2xl text-xs sm:text-sm font-medium border border-border bg-surface hover:bg-secondary text-slate-300 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+          className="w-1/3 py-3 px-4 rounded-2xl text-xs sm:text-sm font-medium border border-border bg-surface hover:bg-secondary text-foreground-secondary hover:text-foreground transition-colors cursor-pointer flex items-center justify-center gap-1.5"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back</span>
@@ -342,7 +342,7 @@ export const StepIdentity = ({
           onClick={onSubmit}
           className={`w-2/3 py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 ${
             hasBackedUp && !isSubmitting
-              ? "bg-tertiary hover:opacity-90 text-white shadow-tertiary/20 hover:scale-[1.01]"
+              ? "bg-tertiary hover:opacity-90 text-tertiary-foreground shadow-tertiary/20 hover:scale-[1.01]"
               : "bg-surface text-muted border border-border cursor-not-allowed"
           }`}
         >

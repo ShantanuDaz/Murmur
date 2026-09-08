@@ -38,7 +38,7 @@ export const StepProfile = ({
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Header */}
       <div className="text-center space-y-1.5">
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center justify-center gap-1.5">
+        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center justify-center gap-1.5">
           <span>Make it Yours, {name}</span>
           <Sparkles className="w-5 h-5 text-tertiary" />
         </h2>
@@ -51,7 +51,7 @@ export const StepProfile = ({
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Avatar Selection */}
         <div className="space-y-2.5">
-          <label className="block text-xs font-medium text-slate-300">
+          <label className="block text-xs font-medium text-foreground-secondary">
             Choose an Avatar
           </label>
           <div className="flex items-center gap-3">
@@ -92,7 +92,7 @@ export const StepProfile = ({
           <div className="space-y-1.5">
             <label
               htmlFor="step2-bio-input"
-              className="block text-xs font-medium text-slate-300 flex items-center gap-1.5"
+              className="block text-xs font-medium text-foreground-secondary flex items-center gap-1.5"
             >
               <Smile className="w-3.5 h-3.5 text-tertiary" />
               <span>Bio</span>
@@ -105,7 +105,7 @@ export const StepProfile = ({
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="A few words about you..."
-              className="w-full bg-surface border border-border focus:border-tertiary focus:ring-1 focus:ring-tertiary rounded-2xl px-3.5 py-2.5 text-xs text-slate-100 placeholder:text-muted outline-none transition-colors"
+              className="w-full bg-surface border border-border focus:border-tertiary focus:ring-1 focus:ring-tertiary rounded-2xl px-3.5 py-2.5 text-xs text-foreground placeholder:text-muted outline-none transition-colors"
             />
           </div>
 
@@ -113,7 +113,7 @@ export const StepProfile = ({
           <div className="space-y-1.5">
             <label
               htmlFor="step2-birthday-input"
-              className="block text-xs font-medium text-slate-300 flex items-center gap-1.5"
+              className="block text-xs font-medium text-foreground-secondary flex items-center gap-1.5"
             >
               <Calendar className="w-3.5 h-3.5 text-tertiary" />
               <span>Birthday</span>
@@ -124,7 +124,7 @@ export const StepProfile = ({
               type="date"
               value={birthday}
               onChange={(e) => setBirthday(e.target.value)}
-              className="w-full bg-surface border border-border focus:border-tertiary focus:ring-1 focus:ring-tertiary rounded-2xl px-3.5 py-2.5 text-xs text-slate-100 placeholder:text-muted outline-none transition-colors scheme-dark"
+              className="w-full bg-surface border border-border focus:border-tertiary focus:ring-1 focus:ring-tertiary rounded-2xl px-3.5 py-2.5 text-xs text-foreground placeholder:text-muted outline-none transition-colors"
             />
           </div>
         </div>
@@ -134,14 +134,14 @@ export const StepProfile = ({
           <button
             type="button"
             onClick={onBack}
-            className="w-1/3 py-3 px-4 rounded-2xl text-xs sm:text-sm font-medium border border-border bg-surface hover:bg-secondary text-slate-300 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+            className="w-1/3 py-3 px-4 rounded-2xl text-xs sm:text-sm font-medium border border-border bg-surface hover:bg-secondary text-foreground-secondary hover:text-foreground transition-colors cursor-pointer flex items-center justify-center gap-1.5"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back</span>
           </button>
           <button
             type="submit"
-            className="w-2/3 py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold bg-tertiary hover:opacity-90 text-white shadow-lg shadow-tertiary/20 hover:scale-[1.01] transition-all cursor-pointer flex items-center justify-center gap-1.5"
+            className="w-2/3 py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold bg-tertiary hover:opacity-90 text-tertiary-foreground shadow-lg shadow-tertiary/20 hover:scale-[1.01] transition-all cursor-pointer flex items-center justify-center gap-1.5"
           >
             <span>Next: Security & Keys</span>
             <ArrowRight className="w-4 h-4" />

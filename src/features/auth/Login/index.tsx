@@ -11,6 +11,7 @@ import { StepWelcome } from "./components/StepWelcome";
 import { StepProfile } from "./components/StepProfile";
 import { StepIdentity } from "./components/StepIdentity";
 import { StepImport } from "./components/StepImport";
+import { ThemeToggle } from "../../../components/ThemeToggle";
 
 type Step = 1 | 2 | 3 | "import";
 
@@ -139,7 +140,12 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-primary text-slate-100 flex items-center justify-center p-3 sm:p-6 selection:bg-tertiary/30 selection:text-tertiary transition-colors">
+    <div className="min-h-screen bg-primary text-foreground flex items-center justify-center p-3 sm:p-6 selection:bg-tertiary/30 selection:text-tertiary transition-colors relative">
+      {/* Theme toggle in top right */}
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
+
       {/* Background ambient glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
         <div className="w-[500px] h-[500px] bg-tertiary/10 rounded-full blur-[120px] -translate-y-24" />
