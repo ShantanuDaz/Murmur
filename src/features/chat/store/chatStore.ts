@@ -4,6 +4,7 @@ import type {
   ChatMessage,
   ConnectionStatus,
   PeerInfo,
+  MediaStatus,
 } from "../../../types/chat";
 import { P2PRoomSession } from "../../../services/trystero";
 
@@ -12,25 +13,47 @@ interface ChatState {
   status: ConnectionStatus;
   peers: Record<string, PeerInfo>;
   messages: ChatMessage[];
+  // Video & Audio state
+  localStream: MediaStream | null;
+  isVideoEnabled: boolean;
+  isAudioEnabled: boolean;
+  peerStreams: Record<string, MediaStream>;
+  peerMediaStatus: Record<string, MediaStatus>;
+  mediaError: string | null;
+
   joinRoom: (roomId: string, localProfile: UserProfile) => void;
   leaveRoom: () => void;
   sendMessage: (text: string) => Promise<void>;
   clearMessages: () => void;
+  toggleVideo: () => Promise<void>;
+  toggleAudio: () => void;
+  clearMediaError: () => void;
 }
 
 let activeSession: P2PRoomSession | null = null;
 
-export const useChatStore = create<ChatState>((set) => ({
+export const useChatStore = create<ChatState>((set, get) => ({
   activeRoomId: null,
   status: "disconnected",
   peers: {},
   messages: [],
+  localStream: null,
+  isVideoEnabled: false,
+  isAudioEnabled: false,
+  peerStreams: {},
+  peerMediaStatus: {},
+  mediaError: null,
 
   joinRoom: (rawRoomId: string, localProfile: UserProfile) => {
     const roomId = rawRoomId.trim().toLowerCase();
     if (!roomId) return;
 
-    // Teardown any existing session
+    // Teardown any existing session & media
+    const currentStream = get().localStream;
+    if (currentStream) {
+      currentStream.getTracks().forEach((t) => t.stop());
+    }
+
     if (activeSession) {
       activeSession.leave();
       activeSession = null;
@@ -41,6 +64,12 @@ export const useChatStore = create<ChatState>((set) => ({
       activeRoomId: roomId,
       status: "connecting",
       peers: {},
+      localStream: null,
+      isVideoEnabled: false,
+      isAudioEnabled: false,
+      peerStreams: {},
+      peerMediaStatus: {},
+      mediaError: null,
       messages: [
         {
           id: `sys-${Date.now()}-init`,
@@ -105,6 +134,7 @@ export const useChatStore = create<ChatState>((set) => ({
               peerId,
               profile,
               joinedAt: existingPeer ? existingPeer.joinedAt : Date.now(),
+              mediaStatus: state.peerMediaStatus[peerId],
             },
           };
 
@@ -130,6 +160,38 @@ export const useChatStore = create<ChatState>((set) => ({
         });
       },
 
+      onPeerStream: (stream, peerId) => {
+        set((state) => ({
+          peerStreams: {
+            ...state.peerStreams,
+            [peerId]: stream,
+          },
+          peerMediaStatus: {
+            ...state.peerMediaStatus,
+            [peerId]: {
+              video: true,
+              audio: state.peerMediaStatus[peerId]?.audio ?? true,
+            },
+          },
+        }));
+      },
+
+      onPeerMediaStatus: (peerId, status) => {
+        set((state) => {
+          const newStreams = { ...state.peerStreams };
+          if (!status.video && newStreams[peerId]) {
+            delete newStreams[peerId];
+          }
+          return {
+            peerStreams: newStreams,
+            peerMediaStatus: {
+              ...state.peerMediaStatus,
+              [peerId]: status,
+            },
+          };
+        });
+      },
+
       onPeerLeave: (peerId) => {
         set((state) => {
           const peer = state.peers[peerId];
@@ -137,8 +199,16 @@ export const useChatStore = create<ChatState>((set) => ({
           const remainingPeers = { ...state.peers };
           delete remainingPeers[peerId];
 
+          const remainingStreams = { ...state.peerStreams };
+          delete remainingStreams[peerId];
+
+          const remainingMediaStatus = { ...state.peerMediaStatus };
+          delete remainingMediaStatus[peerId];
+
           return {
             peers: remainingPeers,
+            peerStreams: remainingStreams,
+            peerMediaStatus: remainingMediaStatus,
             messages: [
               ...state.messages,
               {
@@ -175,6 +245,11 @@ export const useChatStore = create<ChatState>((set) => ({
   },
 
   leaveRoom: () => {
+    const currentStream = get().localStream;
+    if (currentStream) {
+      currentStream.getTracks().forEach((t) => t.stop());
+    }
+
     if (activeSession) {
       activeSession.leave();
       activeSession = null;
@@ -185,6 +260,12 @@ export const useChatStore = create<ChatState>((set) => ({
       status: "disconnected",
       peers: {},
       messages: [],
+      localStream: null,
+      isVideoEnabled: false,
+      isAudioEnabled: false,
+      peerStreams: {},
+      peerMediaStatus: {},
+      mediaError: null,
     });
   },
 
@@ -211,6 +292,96 @@ export const useChatStore = create<ChatState>((set) => ({
     } catch (err) {
       console.error("Failed to send P2P message:", err);
     }
+  },
+
+  toggleVideo: async () => {
+    const state = get();
+    if (state.isVideoEnabled && state.localStream) {
+      // Turn off video
+      state.localStream.getTracks().forEach((track) => track.stop());
+      if (activeSession) {
+        activeSession.removeLocalStream();
+      }
+      set({
+        localStream: null,
+        isVideoEnabled: false,
+        isAudioEnabled: false,
+        mediaError: null,
+      });
+    } else {
+      // Turn on video
+      try {
+        set({ mediaError: null });
+        let stream: MediaStream;
+        let hasAudio = true;
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              width: { ideal: 640 },
+              height: { ideal: 480 },
+              facingMode: "user",
+            },
+            audio: true,
+          });
+        } catch {
+          // Fallback to video only if microphone access fails or device has no mic
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              width: { ideal: 640 },
+              height: { ideal: 480 },
+              facingMode: "user",
+            },
+            audio: false,
+          });
+          hasAudio = false;
+        }
+
+        if (activeSession) {
+          activeSession.addLocalStream(stream, {
+            video: true,
+            audio: hasAudio,
+          });
+        }
+
+        set({
+          localStream: stream,
+          isVideoEnabled: true,
+          isAudioEnabled: hasAudio,
+        });
+      } catch (err) {
+        console.error("Camera access error:", err);
+        const msg =
+          err instanceof Error && err.name === "NotAllowedError"
+            ? "Camera access was denied. Please allow camera permissions in your browser."
+            : "Could not access camera. Please check your device connection.";
+        set({ mediaError: msg });
+      }
+    }
+  },
+
+  toggleAudio: () => {
+    const state = get();
+    if (!state.localStream) return;
+    const audioTracks = state.localStream.getAudioTracks();
+    if (audioTracks.length === 0) return;
+
+    const newAudioState = !state.isAudioEnabled;
+    audioTracks.forEach((t) => {
+      t.enabled = newAudioState;
+    });
+
+    if (activeSession) {
+      activeSession.updateMediaStatus({
+        video: state.isVideoEnabled,
+        audio: newAudioState,
+      });
+    }
+
+    set({ isAudioEnabled: newAudioState });
+  },
+
+  clearMediaError: () => {
+    set({ mediaError: null });
   },
 
   clearMessages: () => {

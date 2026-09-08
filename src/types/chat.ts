@@ -26,10 +26,23 @@ export interface ChatPayload {
   sender: UserProfile;
 }
 
+export interface MediaStatus {
+  video: boolean;
+  audio: boolean;
+}
+
+export interface MediaStatusPayload {
+  [key: string]: unknown;
+  video: boolean;
+  audio: boolean;
+  senderId?: string;
+}
+
 export type ConnectionStatus = "disconnected" | "connecting" | "connected";
 
 export interface PeerInfo {
   peerId: string;
   profile: UserProfile;
   joinedAt: number;
+  mediaStatus?: MediaStatus;
 }
