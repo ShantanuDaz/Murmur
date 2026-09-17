@@ -1,48 +1,43 @@
 import { create } from "zustand";
-import type { AuthState, UserProfile, UserSecrets } from "../../../types/auth";
-import {
-  saveLocalIdentity,
-  loadLocalIdentity,
-  clearLocalIdentity,
-  updateLocalProfile,
-} from "../../../db";
-import { requestPersistentStorage } from "../../../services/storagePersistence";
+import type {
+  AuthState,
+  UserProfile,
+  DeviceKeyring,
+  UserSecrets,
+} from "../../../types/auth";
 
+// Guard against duplicate simultaneous initialization runs
 let initPromise: Promise<void> | null = null;
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   profile: null,
+  device: null,
   secrets: null,
   isAuthenticated: false,
   isLoading: true,
 
+  /**
+   * Probes the local storage/database on cold application boot.
+   */
   initialize: async () => {
     if (initPromise) return initPromise;
 
     initPromise = (async () => {
       try {
-        const stored = await loadLocalIdentity();
-        if (stored) {
-          set({
-            profile: stored.profile,
-            secrets: stored.secrets,
-            isAuthenticated: true,
-            isLoading: false,
-          });
-          // Secure browser persistent storage in the background
-          requestPersistentStorage().catch(console.warn);
-        } else {
-          set({
-            profile: null,
-            secrets: null,
-            isAuthenticated: false,
-            isLoading: false,
-          });
-        }
-      } catch (err) {
-        console.error("Failed to initialize auth from IndexedDB:", err);
+        // TODO: In Step 1.3, this will call loadLocalIdentity() from Dexie
+        // For now, if no credentials stored, we gracefully set unauthenticated
         set({
           profile: null,
+          device: null,
+          secrets: null,
+          isAuthenticated: false,
+          isLoading: false,
+        });
+      } catch (err) {
+        console.error("Failed to initialize auth keystore:", err);
+        set({
+          profile: null,
+          device: null,
           secrets: null,
           isAuthenticated: false,
           isLoading: false,
@@ -55,55 +50,65 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     return initPromise;
   },
 
-  login: async (profile: UserProfile, secrets: UserSecrets) => {
+  /**
+   * Commits an active authenticated session to memory (and later to Dexie DB).
+   */
+  login: async (
+    profile: UserProfile,
+    device: DeviceKeyring,
+    secrets?: UserSecrets,
+  ) => {
     try {
-      await saveLocalIdentity(profile, secrets);
-      // Lock persistence with browser
-      await requestPersistentStorage();
-
+      // TODO: In Step 1.3, this will call saveLocalIdentity(profile, device, secrets)
       set({
         profile,
-        secrets,
+        device,
+        secrets: secrets ?? null,
         isAuthenticated: true,
         isLoading: false,
       });
     } catch (err) {
-      console.error("Failed to save auth to IndexedDB:", err);
-      // Still allow in-memory login if IndexedDB encounters an issue
+      console.error("Failed to save session to keystore:", err);
+      // Fallback in-memory session
       set({
         profile,
-        secrets,
+        device,
+        secrets: secrets ?? null,
         isAuthenticated: true,
         isLoading: false,
       });
     }
   },
 
+  /**
+   * Clears the active session and credentials.
+   */
   logout: async () => {
     try {
-      await clearLocalIdentity();
+      // TODO: In Step 1.3, this will call clearLocalIdentity()
     } catch (err) {
-      console.warn("Failed to clear IndexedDB on logout:", err);
+      console.warn("Failed to clear local keystore on logout:", err);
     }
+
     set({
       profile: null,
+      device: null,
       secrets: null,
       isAuthenticated: false,
       isLoading: false,
     });
   },
 
+  /**
+   * Updates fields on the active user profile.
+   */
   updateProfile: async (updates: Partial<UserProfile>) => {
     const current = get().profile;
     if (!current) return;
 
     const updated = { ...current, ...updates };
-    try {
-      await updateLocalProfile(current.id, updates);
-    } catch (err) {
-      console.warn("Failed to update profile in IndexedDB:", err);
-    }
-
     set({ profile: updated });
+
+    // TODO: In Step 1.3, update in Dexie as well
   },
 }));

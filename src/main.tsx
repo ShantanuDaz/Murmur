@@ -1,32 +1,40 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
-import Auth from "./features/auth";
-
-import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
-import Login from "./features/auth/Login";
-import { useAuthStore } from "./features/auth/store/authStore";
+import "./index.css";
+import App from "./App.tsx";
+import { Auth } from "./features/auth/Auth";
+import { Login } from "./features/auth/Login";
+import { Profile } from "./features/auth/Profile";
+import { Chat } from "./features/chat/Chat";
 
-import { ReloadPrompt } from "./components/pwa/ReloadPrompt";
-
-// Initialize auth state from IndexedDB early on application boot
-useAuthStore.getState().initialize();
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: () => (
+    element: (
       <Auth>
         <App />
       </Auth>
     ),
+    children: [
+      {
+        index: true,
+        element: <Chat />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+    ],
   },
-  { path: "login", Component: Login },
+  {
+    path: "/login",
+    element: <Login />,
+  },
 ]);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <RouterProvider router={router} />
-    <ReloadPrompt />
   </StrictMode>,
 );
