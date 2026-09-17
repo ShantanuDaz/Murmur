@@ -9,12 +9,9 @@ import {
   Info,
   LogOut,
   Video,
-  VideoOff,
   MessageSquare,
   PanelRightClose,
   ChevronDown,
-  Maximize2,
-  Minimize2,
 } from "lucide-react";
 
 import { useChatStore } from "../store/chatStore";
@@ -189,171 +186,119 @@ export const ChatRoom: React.FC = () => {
             }`
       }`}
     >
-      {/* Top Room Header */}
-      <header className="px-4 sm:px-6 py-3.5 border-b border-border bg-surface/60 backdrop-blur-md flex items-center justify-between gap-3 shrink-0">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={handleLeaveRoom}
-            className="p-2 rounded-xl text-muted hover:text-foreground hover:bg-surface border border-transparent hover:border-border transition-colors cursor-pointer"
-            title="Leave room"
-          >
-            <ArrowLeft className="w-4 h-4" />
-          </button>
-
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-base font-bold text-foreground font-mono flex items-center gap-1.5">
-                <span className="text-tertiary">#</span>
-                <span>{activeRoomId}</span>
-              </h2>
-
-              <button
-                type="button"
-                onClick={() => copy(activeRoomId || "")}
-                className="p-1 rounded-md text-muted hover:text-tertiary hover:bg-surface transition-colors cursor-pointer"
-                title="Copy room name"
-              >
-                {copied ? (
-                  <Check className="w-3.5 h-3.5 text-success" />
-                ) : (
-                  <Copy className="w-3.5 h-3.5" />
-                )}
-              </button>
-            </div>
-
-            {/* Status indicator */}
-            <div className="flex items-center gap-1.5 text-[11px] text-muted">
-              {status === "connecting" ? (
-                <>
-                  <span className="w-2 h-2 rounded-full bg-warning animate-ping" />
-                  <span className="text-warning">
-                    Discovering peers via Nostr...
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span className="w-2 h-2 rounded-full bg-success" />
-                  <span className="text-success font-medium">
-                    P2P Mesh Active
-                  </span>
-                  <span>&bull;</span>
-                  <span>Direct RTCDataChannel</span>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Peer Roster Indicator & Controls */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-2 bg-surface/80 border border-border rounded-full py-1.5 px-3">
-            <Users className="w-3.5 h-3.5 text-tertiary" />
-            <span className="text-xs font-medium text-foreground-secondary">
-              {peerCount === 0
-                ? "Waiting for peers"
-                : `${peerCount} ${peerCount === 1 ? "peer" : "peers"} connected`}
-            </span>
-
-            {/* Active peer avatar pills */}
-            {peerList.length > 0 && (
-              <div className="flex -space-x-1.5 ml-1">
-                {peerList.slice(0, 4).map((p) => {
-                  const avatar = getAvatarById(p.profile?.avatar);
-                  return (
-                    <div
-                      key={p.peerId}
-                      title={`${p.profile.name} (${shortenKey(p.profile.publicKey)})`}
-                      className={`w-5 h-5 rounded-full bg-gradient-to-br ${avatar.bgGradient} flex items-center justify-center text-[10px] border border-secondary shadow`}
-                    >
-                      {avatar.emoji}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          {/* Chat Slider Toggle Button (visible when video is active) */}
-          {hasActiveVideo && (
+      {/* Top Room Header - Hidden in Fullscreen Mode */}
+      {!isFullscreenActive && (
+        <header className="px-4 sm:px-6 py-3.5 border-b border-border bg-surface/60 backdrop-blur-md flex items-center justify-between gap-3 shrink-0">
+          <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={handleToggleChat}
-              className={`flex items-center gap-1.5 py-1.5 px-3 text-xs rounded-xl border transition-colors cursor-pointer relative ${
-                isChatOpen
-                  ? "bg-tertiary/15 text-tertiary border-tertiary/40 font-medium"
-                  : "bg-surface/80 text-foreground hover:text-tertiary border-border hover:border-tertiary/40"
-              }`}
-              title={isChatOpen ? "Hide chat slider" : "Open chat slider"}
+              onClick={handleLeaveRoom}
+              className="p-2 rounded-xl text-muted hover:text-foreground hover:bg-surface border border-transparent hover:border-border transition-colors cursor-pointer"
+              title="Leave room"
             >
-              <MessageSquare className="w-3.5 h-3.5 text-tertiary" />
-              <span className="hidden sm:inline">
-                {isChatOpen ? "Hide Chat" : "Chat"}
-              </span>
-              {unreadCount > 0 && !isChatOpen && (
-                <span className="px-1.5 py-0.2 bg-tertiary text-tertiary-foreground text-[10px] font-bold rounded-full animate-bounce">
-                  {unreadCount}
-                </span>
-              )}
+              <ArrowLeft className="w-4 h-4" />
             </button>
-          )}
 
-          {/* Video Toggle Button */}
-          <button
-            type="button"
-            onClick={handleToggleVideo}
-            className={`flex items-center gap-1.5 py-1.5 px-3 text-xs rounded-xl border transition-colors cursor-pointer ${
-              isVideoEnabled
-                ? "bg-destructive/15 text-destructive border-destructive/40 hover:bg-destructive/25"
-                : "bg-surface/80 text-foreground hover:text-tertiary border-border hover:border-tertiary/40"
-            }`}
-            title={isVideoEnabled ? "Turn off camera" : "Turn on camera"}
-          >
-            {isVideoEnabled ? (
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-bold text-foreground font-mono flex items-center gap-1.5">
+                  <span className="text-tertiary">#</span>
+                  <span>{activeRoomId}</span>
+                </h2>
+
+                <button
+                  type="button"
+                  onClick={() => copy(activeRoomId || "")}
+                  className="p-1 rounded-md text-muted hover:text-tertiary hover:bg-surface transition-colors cursor-pointer"
+                  title="Copy room name"
+                >
+                  {copied ? (
+                    <Check className="w-3.5 h-3.5 text-success" />
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" />
+                  )}
+                </button>
+              </div>
+
+              {/* Status indicator */}
+              <div className="flex items-center gap-1.5 text-[11px] text-muted">
+                {status === "connecting" ? (
+                  <>
+                    <span className="w-2 h-2 rounded-full bg-warning animate-ping" />
+                    <span className="text-warning">
+                      Discovering peers via Nostr...
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="w-2 h-2 rounded-full bg-success" />
+                    <span className="text-success font-medium">
+                      P2P Mesh Active
+                    </span>
+                    <span>&bull;</span>
+                    <span>Direct RTCDataChannel</span>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Peer Roster Indicator & Controls */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 bg-surface/80 border border-border rounded-full py-1.5 px-3">
+              <Users className="w-3.5 h-3.5 text-tertiary" />
+              <span className="text-xs font-medium text-foreground-secondary">
+                {peerCount === 0
+                  ? "Waiting for peers"
+                  : `${peerCount} ${peerCount === 1 ? "peer" : "peers"} connected`}
+              </span>
+
+              {/* Active peer avatar pills */}
+              {peerList.length > 0 && (
+                <div className="flex -space-x-1.5 ml-1">
+                  {peerList.slice(0, 4).map((p) => {
+                    const avatar = getAvatarById(p.profile?.avatar);
+                    return (
+                      <div
+                        key={p.peerId}
+                        title={`${p.profile.name} (${shortenKey(p.profile.publicKey)})`}
+                        className={`w-5 h-5 rounded-full bg-gradient-to-br ${avatar.bgGradient} flex items-center justify-center text-[10px] border border-secondary shadow`}
+                      >
+                        {avatar.emoji}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* In Text Chat Mode (no video yet): Show Start Video and Leave Room buttons */}
+            {!hasActiveVideo && (
               <>
-                <VideoOff className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline font-medium">Stop Video</span>
-              </>
-            ) : (
-              <>
-                <Video className="w-3.5 h-3.5 text-tertiary" />
-                <span className="hidden sm:inline font-medium">Video</span>
+                <button
+                  type="button"
+                  onClick={handleToggleVideo}
+                  className="p-2 rounded-xl border border-border hover:border-tertiary/40 bg-surface/80 text-foreground hover:text-tertiary transition-all cursor-pointer"
+                  title="Start video"
+                  aria-label="Start video"
+                >
+                  <Video className="w-4 h-4 text-tertiary" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleLeaveRoom}
+                  className="p-2 text-muted hover:text-destructive hover:bg-destructive/10 border border-border hover:border-destructive/40 rounded-xl transition-all cursor-pointer"
+                  title="Leave room"
+                  aria-label="Leave room"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
               </>
             )}
-          </button>
-
-          {/* Fullscreen Toggle (Google Meet Style) */}
-          <button
-            type="button"
-            onClick={handleToggleFullscreen}
-            className={`p-2 rounded-xl border transition-colors cursor-pointer ${
-              isFullscreenActive
-                ? "bg-tertiary/15 text-tertiary border-tertiary/40"
-                : "bg-surface/80 text-muted hover:text-foreground border-border hover:border-border/80"
-            }`}
-            title={
-              isFullscreenActive
-                ? "Exit full screen (Google Meet)"
-                : "Full screen (Google Meet)"
-            }
-          >
-            {isFullscreenActive ? (
-              <Minimize2 className="w-4 h-4" />
-            ) : (
-              <Maximize2 className="w-4 h-4" />
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={handleLeaveRoom}
-            className="hidden sm:flex items-center gap-1.5 py-1.5 px-3 text-xs text-muted hover:text-destructive border border-border hover:border-destructive/40 rounded-xl transition-colors cursor-pointer"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>Leave</span>
-          </button>
-        </div>
-      </header>
+          </div>
+        </header>
+      )}
 
       {/* Main Room Body: 2.5:1 grid ratio between video and chat when both are active */}
       <div

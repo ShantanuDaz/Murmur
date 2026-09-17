@@ -317,8 +317,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
         try {
           stream = await navigator.mediaDevices.getUserMedia({
             video: {
-              width: { ideal: 640 },
-              height: { ideal: 480 },
+              width: { ideal: 1280, max: 1920 },
+              height: { ideal: 720, max: 1080 },
+              aspectRatio: { ideal: 1.777777778 },
               facingMode: "user",
             },
             audio: true,
@@ -327,8 +328,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
           // Fallback to video only if microphone access fails or device has no mic
           stream = await navigator.mediaDevices.getUserMedia({
             video: {
-              width: { ideal: 640 },
-              height: { ideal: 480 },
+              width: { ideal: 1280, max: 1920 },
+              height: { ideal: 720, max: 1080 },
+              aspectRatio: { ideal: 1.777777778 },
               facingMode: "user",
             },
             audio: false,
