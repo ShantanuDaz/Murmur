@@ -1,68 +1,59 @@
-# Project Specification: Sovereign P2P Web Chat (The Serverless Matrix)
+# Project Specification: Sovereign P2P Web Chat & Calls (MVP)
 
-A 100% serverless, decentralized, offline-first peer-to-peer web application delivering a native-feeling messaging experience entirely within the sandboxed runtime of modern web browsers.
-
----
-
-## 1. Scope & Core Architectural Pillars
-
-### In Scope for Production Specification
-
-- **Deterministic Cryptographic Identity & Device Slots**: 24-word BIP-39 mnemonic generating a 512-bit master seed, deriving Master Public Account ID and ECDSA P-256 signing keys, plus deterministic HKDF derivation of 10–20 pre-authenticated device identity slots.
-- **Local-First & Offline-First CRDT Storage**: Per-channel Automerge CRDT documents operating an append-only change log. All rows committed to IndexedDB are encrypted at-rest using AES-GCM-256 derived from a user passcode/PIN via PBKDF2 (600,000 iterations).
-- **Blind Signaling & Zero-Trust Traversal**: WebRTC signaling orchestrated across volunteer BitTorrent WebSocket trackers (with Nostr fallback) using blind discovery hashes: $\text{Room\_Name} = \text{SHA256}(\text{Alice\_Public\_ID})$. Sockets enforce mutual zero-trust ECDSA challenge-response upon peer join.
-- **Background Push-Payload Synchronization Hybrid**: Direct peer-to-push HTTPS POST to recipient device OS endpoints (Google FCM / Apple APNs) with encrypted 4KB Automerge binary change blocks. Service Worker 10-second background execution window appends incoming deltas directly to IndexedDB.
-- **Infinite Large File Streaming via OPFS**: Multi-gigabyte file transfers stream from disk to disk using the Origin Private File System (OPFS) and Web Workers with `ReadableStream` 16KB AES-GCM encrypted chunks, maintaining tab RAM below 20MB.
-- **WebAuthn Biometric Bio-Unlock**: Biometric session unlock (Face ID, Touch ID, Windows Hello) protecting local cryptographic keystore.
+A 100% serverless, decentralized, local-first peer-to-peer web application delivering text messaging, direct chat, group rooms, and audio/video calling entirely within the browser.
 
 ---
 
-## 2. System Architecture Layers
+## 1. MVP Scope & Core Deliverables
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        USER INTERFACE LAYER                            │
-│         (Tailwind CSS v4 + React 19 + WebAuthn Bio-Unlock)             │
-└──────────────────────────────────┬─────────────────────────────────────┘
-                                   │
-         ┌─────────────────────────┴─────────────────────────┐
-         ▼                                                   ▼
-┌───────────────────────────────┐                   ┌────────────────────┐
-│      SERVICE WORKER           │                   │    WEB WORKER      │
-│  (Background Push Listener)   │                   │ (The Heavy Engine) │
-└────────┬──────────────────────┘                   └────────┬───────────┘
-         │                                                   │
-         │ (Writes 4KB Encrypted Payloads)                   │ (Streams WebRTC
-         │                                                   │  & Chunked Files)
-         ▼                                                   ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│                        LOCAL STORAGE LAYER                             │
-│  - IndexedDB (Automerge Change Logs - Encrypted-at-Rest via PIN)       │
-│  - OPFS (Direct-to-Disk High-Speed Large Binary File Streaming)        │
-└────────────────────────────────────────────────────────────────────────┘
-```
+The MVP focuses on five foundational pillars:
 
----
+1. **User Identity (Root Account)**:
+   - 12/24-word BIP-39 mnemonic generating a 512-bit master seed.
+   - Master Account ID derived from Ed25519 root public key.
+   - User profile management (display name, avatar, bio).
+   - Identity backup and restoration via seed phrase.
 
-## 3. Technology Stack Reference
+2. **Device Identity (Local Client Instance)**:
+   - Unique device identifier (`deviceId`) and human-readable label (`deviceName`).
+   - Dedicated local signing (Ed25519) and encryption (X25519) keypairs bound to the user identity.
+   - Stored securely in local browser IndexedDB.
 
-| Layer                     | Technology                                         | Operational Purpose                                                                                                                                       |
-| :------------------------ | :------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Identity / Seed**       | `@scure/bip39`                                     | Converts 24-word cryptographic mnemonics into a 512-bit master binary seed.                                                                               |
-| **Cryptography Core**     | **Web Crypto API**                                 | Native, C++-speed browser functions for asymmetric signing (ECDSA P-256), symmetric data locking (AES-GCM-256), and PBKDF2 / HKDF derivation.             |
-| **Data Structure Engine** | **Automerge (CRDT)**                               | Operates an append-only cryptographic change log to merge concurrent, offline mutations with zero central authority conflict.                             |
-| **Signaling Adapter**     | **Trystero (BitTorrent Primary + Nostr Fallback)** | Connects to public, volunteer WebTorrent WebSocket trackers solely to swap WebRTC ICE connection coordinates using blind hashes (`SHA256(Target_PubID)`). |
-| **Network Pipe**          | **WebRTC `RTCDataChannel`**                        | Direct, raw browser-to-browser data conduits. Fully bypassed after the initial signaling handshake.                                                       |
-| **Background Sync**       | **Web Push API**                                   | Dispatches standard JSON notifications to client-device operating system endpoints via direct HTTPS POST requests from peer clients.                      |
-| **Database Storage**      | **IndexedDB (`idb` / Dexie)**                      | Client-side, persistent file-system rows fortified at-rest via password-derived key encryption.                                                           |
-| **File Storage Pipeline** | **OPFS (Origin Private File System)**              | High-speed, zero-RAM browser file handle streams to disk, bypassing web page execution memory limits.                                                     |
+3. **One-on-One (1:1) Chat**:
+   - Direct peer-to-peer messaging between two users.
+   - Deterministic direct room topic rendezvous or direct invite code.
+   - Message persistence in local IndexedDB.
+   - Peer presence and connection status indicators.
+
+4. **Group Chat**:
+   - Multi-peer WebRTC mesh rooms with shareable room names and IDs.
+   - Live presence rosters showing connected participants with user and device details.
+   - Real-time message broadcasting and persistent room history.
+
+5. **Audio & Video Calls (Single & Group)**:
+   - P2P WebRTC media streaming for both 1:1 and group calls.
+   - Media controls: microphone mute/unmute, camera toggle on/off, call end.
+   - Responsive video grid adapting to participant count.
+   - Visual status indicators for muted audio and video-off states with avatar fallbacks.
 
 ---
 
-## 4. Architectural Blueprint & Implementation Phases
+## 2. Technical Stack Reference
 
-For the complete architectural design, sequence diagrams, and security specifications, refer to:
-👉 **[`ARCHITECTURE.md`](./ARCHITECTURE.md)**
+| Layer                     | Technology        | Operational Purpose                                |
+| :------------------------ | :---------------- | :------------------------------------------------- |
+| **Framework & UI**        | React 19 + Vite   | Fast client-side rendering                         |
+| **Styling**               | Tailwind CSS v4   | Clean, responsive design                           |
+| **Icons**                 | Lucide React      | Clean icon set                                     |
+| **State Management**      | Zustand           | Reactive client state (`authStore`, `chatStore`)   |
+| **Identity / Seed**       | `@scure/bip39`    | BIP-39 mnemonic generation & validation            |
+| **Cryptography**          | `@noble/curves`   | Ed25519 & X25519 curves                            |
+| **P2P Signaling & Media** | Trystero          | Serverless WebRTC mesh matchmaking & media streams |
+| **Storage**               | Dexie (IndexedDB) | Persistent client-side database                    |
 
-For the step-by-step developer checklist and AI mentor guide, refer to:
-👉 **[`docs/ROADMAP.md`](./docs/ROADMAP.md)**
+---
+
+## 3. Reference Architecture & Implementation Guide
+
+- Complete Architectural Blueprint: 👉 [`ARCHITECTURE.md`](./ARCHITECTURE.md)
+- Step-by-Step Developer Roadmap: 👉 [`docs/ROADMAP.md`](./docs/ROADMAP.md)

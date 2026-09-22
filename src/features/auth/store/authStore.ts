@@ -1,114 +1,89 @@
 import { create } from "zustand";
-import type {
-  AuthState,
-  UserProfile,
-  DeviceKeyring,
-  UserSecrets,
-} from "../../../types/auth";
+import type { AuthState } from "../authTypes.ts";
+import { isValidDevice, isValidProfile } from "../utils.ts";
+import {
+  getStorageItem,
+  setStorageItem,
+  removeStorageItem,
+} from "../../../utils/storage.ts";
 
-// Guard against duplicate simultaneous initialization runs
-let initPromise: Promise<void> | null = null;
-
-export const useAuthStore = create<AuthState>((set, get) => ({
-  profile: null,
-  device: null,
-  secrets: null,
-  isAuthenticated: false,
+const useAuth = create<AuthState>((set, get) => ({
+  isIdentityExists: null,
   isLoading: true,
+  isPrimaryDevice: false,
+  device: null,
+  profile: null,
 
-  /**
-   * Probes the local storage/database on cold application boot.
-   */
   initialize: async () => {
-    if (initPromise) return initPromise;
+    // If already initialized and not currently loading, skip duplicate work
+    if (get().isIdentityExists !== null && !get().isLoading) return;
 
-    initPromise = (async () => {
-      try {
-        // TODO: In Step 1.3, this will call loadLocalIdentity() from Dexie
-        // For now, if no credentials stored, we gracefully set unauthenticated
+    try {
+      set({ isLoading: true });
+
+      const device = getStorageItem("device", isValidDevice);
+      if (!device) {
         set({
-          profile: null,
+          isIdentityExists: false,
+          isPrimaryDevice: false,
           device: null,
-          secrets: null,
-          isAuthenticated: false,
-          isLoading: false,
-        });
-      } catch (err) {
-        console.error("Failed to initialize auth keystore:", err);
-        set({
           profile: null,
-          device: null,
-          secrets: null,
-          isAuthenticated: false,
-          isLoading: false,
         });
-      } finally {
-        initPromise = null;
+        return;
       }
-    })();
 
-    return initPromise;
-  },
+      const profile = getStorageItem("profile", isValidProfile);
+      const mnemonic = getStorageItem<string>("mnemonic");
 
-  /**
-   * Commits an active authenticated session to memory (and later to Dexie DB).
-   */
-  login: async (
-    profile: UserProfile,
-    device: DeviceKeyring,
-    secrets?: UserSecrets,
-  ) => {
-    try {
-      // TODO: In Step 1.3, this will call saveLocalIdentity(profile, device, secrets)
       set({
-        profile,
+        isIdentityExists: true,
+        isPrimaryDevice: Boolean(mnemonic),
         device,
-        secrets: secrets ?? null,
-        isAuthenticated: true,
-        isLoading: false,
+        profile,
       });
-    } catch (err) {
-      console.error("Failed to save session to keystore:", err);
-      // Fallback in-memory session
+    } catch (error) {
+      console.error("Failed to initialize auth store:", error);
       set({
-        profile,
-        device,
-        secrets: secrets ?? null,
-        isAuthenticated: true,
-        isLoading: false,
+        isIdentityExists: false,
+        isPrimaryDevice: false,
+        device: null,
+        profile: null,
       });
+    } finally {
+      set({ isLoading: false });
     }
   },
 
-  /**
-   * Clears the active session and credentials.
-   */
-  logout: async () => {
-    try {
-      // TODO: In Step 1.3, this will call clearLocalIdentity()
-    } catch (err) {
-      console.warn("Failed to clear local keystore on logout:", err);
-    }
-
+  setDevice: (device) => {
+    setStorageItem("device", device);
+    const mnemonic = getStorageItem<string>("mnemonic");
     set({
-      profile: null,
-      device: null,
-      secrets: null,
-      isAuthenticated: false,
-      isLoading: false,
+      device,
+      isIdentityExists: Boolean(device),
+      isPrimaryDevice: Boolean(mnemonic),
     });
   },
 
-  /**
-   * Updates fields on the active user profile.
-   */
-  updateProfile: async (updates: Partial<UserProfile>) => {
-    const current = get().profile;
-    if (!current) return;
+  setProfile: (profile) => {
+    setStorageItem("profile", profile);
+    set({ profile });
+  },
 
-    const updated = { ...current, ...updates };
-    set({ profile: updated });
+  getMnemonic: () => {
+    return getStorageItem<string>("mnemonic");
+  },
 
-    // TODO: In Step 1.3, update in Dexie as well
+  logout: () => {
+    removeStorageItem("device");
+    removeStorageItem("profile");
+    removeStorageItem("mnemonic");
+    set({
+      isIdentityExists: false,
+      isPrimaryDevice: false,
+      device: null,
+      profile: null,
+    });
   },
 }));
+
+export default useAuth;

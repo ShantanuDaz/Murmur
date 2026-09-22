@@ -7,7 +7,7 @@ export default function App() {
         <div className="flex items-center gap-2">
           <span className="font-bold text-base tracking-tight">Murmur</span>
           <span className="text-[11px] px-2 py-0.5 rounded-full bg-tertiary/15 text-tertiary font-mono">
-            Phase 1
+            MVP
           </span>
         </div>
         <nav className="flex items-center gap-4 text-xs font-medium">

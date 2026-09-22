@@ -6,7 +6,7 @@ import App from "./App.tsx";
 import { Auth } from "./features/auth/Auth";
 import { Login } from "./features/auth/Login";
 import { Profile } from "./features/auth/Profile";
-import { Chat } from "./features/chat/Chat";
+import Chat from "./features/chat/Chat";
 
 const router = createBrowserRouter([
   {
