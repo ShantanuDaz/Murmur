@@ -48,14 +48,16 @@ export const Profile = () => {
 
   if (!device) {
     return (
-      <div className="max-w-md mx-auto text-center py-12 space-y-4">
-        <p className="text-muted text-sm">No active device identity found.</p>
-        <button
-          onClick={() => navigate("/login")}
-          className="px-4 py-2 bg-tertiary text-tertiary-foreground rounded-xl text-xs font-semibold"
-        >
-          Go to Onboarding
-        </button>
+      <div className="flex-1 w-full h-full overflow-y-auto p-4 sm:p-6 md:p-8 flex items-center justify-center">
+        <div className="max-w-md mx-auto text-center py-12 space-y-4">
+          <p className="text-muted text-sm">No active device identity found.</p>
+          <button
+            onClick={() => navigate("/login")}
+            className="px-4 py-2 bg-tertiary text-tertiary-foreground rounded-xl text-xs font-semibold cursor-pointer"
+          >
+            Go to Onboarding
+          </button>
+        </div>
       </div>
     );
   }
@@ -75,60 +77,62 @@ export const Profile = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 pb-12 animate-in fade-in duration-200">
-      {/* 1. Header Card: Profile Info & Inline Edit */}
-      <ProfileHeader
-        profile={profile}
-        isPrimary={Boolean(device.isPrimary)}
-        onSaveProfile={handleSaveProfile}
-      />
-
-      {/* 2. Sovereign Murmur Number / Account ID */}
-      <MurmurNumberCard
-        accountId={device.accountId}
-        onShowQr={() => setShowQrModal(true)}
-      />
-
-      {/* 3. Appearance & Theme (System, Dark, Light) */}
-      <AppearanceCard />
-
-      {/* 4. Local Device Identity & Cryptographic Health */}
-      <DeviceIdentityCard
-        device={device}
-        isCertValid={isCertValid}
-        hasValidKeys={hasValidKeys}
-      />
-
-      {/* 4. Secret Recovery Phrase Backup (Primary Device Only) */}
-      {isPrimaryDevice && (
-        <RecoveryPhraseCard onReveal={() => setShowSeedModal(true)} />
-      )}
-
-      {/* 5. Danger Zone */}
-      <DangerZoneCard onLogoutClick={() => setShowLogoutConfirm(true)} />
-
-      {/* Modals */}
-      <QrCodeModal
-        isOpen={showQrModal}
-        onClose={() => setShowQrModal(false)}
-        accountId={device.accountId}
-      />
-
-      {isPrimaryDevice && (
-        <SeedPhraseModal
-          isOpen={showSeedModal}
-          onClose={() => setShowSeedModal(false)}
-          mnemonic={getMnemonic() || ""}
-          accountId={device.accountId}
-          deviceName={device.deviceName}
+    <div className="flex-1 w-full h-full overflow-y-auto p-4 sm:p-6 md:p-8 overscroll-contain">
+      <div className="max-w-2xl mx-auto space-y-6 pb-16 animate-in fade-in duration-200">
+        {/* 1. Header Card: Profile Info & Inline Edit */}
+        <ProfileHeader
+          profile={profile}
+          isPrimary={Boolean(device.isPrimary)}
+          onSaveProfile={handleSaveProfile}
         />
-      )}
 
-      <LogoutConfirmModal
-        isOpen={showLogoutConfirm}
-        onClose={() => setShowLogoutConfirm(false)}
-        onConfirm={handleLogout}
-      />
+        {/* 2. Sovereign Murmur Number / Account ID */}
+        <MurmurNumberCard
+          accountId={device.accountId}
+          onShowQr={() => setShowQrModal(true)}
+        />
+
+        {/* 3. Appearance & Theme (System, Dark, Light) */}
+        <AppearanceCard />
+
+        {/* 4. Local Device Identity & Cryptographic Health */}
+        <DeviceIdentityCard
+          device={device}
+          isCertValid={isCertValid}
+          hasValidKeys={hasValidKeys}
+        />
+
+        {/* 4. Secret Recovery Phrase Backup (Primary Device Only) */}
+        {isPrimaryDevice && (
+          <RecoveryPhraseCard onReveal={() => setShowSeedModal(true)} />
+        )}
+
+        {/* 5. Danger Zone */}
+        <DangerZoneCard onLogoutClick={() => setShowLogoutConfirm(true)} />
+
+        {/* Modals */}
+        <QrCodeModal
+          isOpen={showQrModal}
+          onClose={() => setShowQrModal(false)}
+          accountId={device.accountId}
+        />
+
+        {isPrimaryDevice && (
+          <SeedPhraseModal
+            isOpen={showSeedModal}
+            onClose={() => setShowSeedModal(false)}
+            mnemonic={getMnemonic() || ""}
+            accountId={device.accountId}
+            deviceName={device.deviceName}
+          />
+        )}
+
+        <LogoutConfirmModal
+          isOpen={showLogoutConfirm}
+          onClose={() => setShowLogoutConfirm(false)}
+          onConfirm={handleLogout}
+        />
+      </div>
     </div>
   );
 };
