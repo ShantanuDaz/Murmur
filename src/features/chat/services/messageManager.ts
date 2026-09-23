@@ -11,6 +11,7 @@ import {
   updateContactStatus,
 } from "../../../services/storage/contacts.ts";
 import { computeDirectRoomId } from "../../../services/storage/rooms.ts";
+import { v4 as uuidv4 } from "uuid";
 import { myRoomManager } from "../../engine/myRoom/myRoomManager.ts";
 import { useConnectionStore } from "../../engine/store/connectionStore.ts";
 import {
@@ -289,7 +290,7 @@ class MessageManager {
     const roomId = computeDirectRoomId(myAccountId, recipient);
 
     const message: Message = {
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       roomId,
       senderAccountId: myAccountId,
       recipientAccountId: recipient,

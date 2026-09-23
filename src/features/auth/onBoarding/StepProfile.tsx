@@ -41,10 +41,10 @@ export const StepProfile = () => {
 
       <div className="text-center space-y-1">
         <h2 className="text-xl font-bold text-foreground">
-          Profile & Local Device
+          Set Up Your Profile
         </h2>
         <p className="text-xs text-muted max-w-xs mx-auto">
-          Choose how peers will see you and label this physical client instance.
+          Choose your name and how friends will see you on Loop.
         </p>
       </div>
 
@@ -68,7 +68,7 @@ export const StepProfile = () => {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Alice"
+            placeholder="e.g. Alex"
             className="w-full px-3.5 py-2.5 rounded-xl bg-surface border border-border focus:border-tertiary focus:outline-none text-foreground text-xs transition-colors"
           />
         </div>
@@ -83,7 +83,7 @@ export const StepProfile = () => {
             type="text"
             value={bio}
             onChange={(e) => setBio(e.target.value)}
-            placeholder="e.g. Exploring sovereign communications"
+            placeholder="e.g. Hey there! I am using Loop."
             className="w-full px-3.5 py-2.5 rounded-xl bg-surface border border-border focus:border-tertiary focus:outline-none text-foreground text-xs transition-colors"
           />
         </div>
@@ -112,17 +112,17 @@ export const StepProfile = () => {
         <button
           type="submit"
           disabled={!name.trim() || isSubmitting}
-          className="w-full mt-2 py-3 px-4 rounded-xl bg-tertiary text-tertiary-foreground font-semibold text-xs tracking-wide flex items-center justify-center gap-2 shadow-lg hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+          className="w-full mt-2 py-3 px-4 rounded-xl bg-tertiary text-white font-semibold text-xs tracking-wide flex items-center justify-center gap-2 shadow-lg hover:bg-tertiary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-tertiary/20"
         >
           {isSubmitting ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Deriving Keys & Registering Device...</span>
+              <span>Setting up your account...</span>
             </>
           ) : (
             <>
               <Sparkles className="w-4 h-4" />
-              <span>Launch Murmur</span>
+              <span>Launch Loop</span>
             </>
           )}
         </button>

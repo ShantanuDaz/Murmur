@@ -3,6 +3,7 @@ import { bytesToHex, hexToBytes } from "@noble/curves/utils.js";
 import { verifyDeviceCertificate } from "../../../services/crypto/device.ts";
 import type { DeviceIdentity } from "../../auth/authTypes.ts";
 import type { HandshakePayload, SignedHandshake } from "../types.ts";
+import { v4 as uuidv4 } from "uuid";
 
 const DEFAULT_MAX_CLOCK_SKEW_MS = 300_000; // 5 minutes tolerance for system clock differences
 
@@ -49,7 +50,7 @@ export const createSignedHandshake = (
     device: params.device,
     targetAccountId: params.targetAccountId.trim().toLowerCase(),
     timestamp: Date.now(),
-    nonce: crypto.randomUUID(),
+    nonce: uuidv4(),
   };
 
   const payloadBytes = serializeHandshakePayload(payload);

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Profile } from "../../auth/authTypes.ts";
 import { ShieldCheck, Edit3, Save } from "lucide-react";
+import { useMyRoom } from "../../../features/engine";
 
 interface ProfileHeaderProps {
   profile: Profile | null;
@@ -13,6 +14,8 @@ export const ProfileHeader = ({
   isPrimary,
   onSaveProfile,
 }: ProfileHeaderProps) => {
+  const { status } = useMyRoom();
+  const isOnline = status === "connected";
   const [isEditing, setIsEditing] = useState(false);
   const [nameInput, setNameInput] = useState(profile?.name || "");
   const [bioInput, setBioInput] = useState(profile?.bio || "");
@@ -42,7 +45,13 @@ export const ProfileHeader = ({
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           {/* Avatar Circle */}
-          <div className="w-16 h-16 rounded-2xl bg-tertiary/15 border-2 border-tertiary/30 flex items-center justify-center text-tertiary font-bold text-xl shadow-inner shrink-0">
+          <div
+            className={`w-16 h-16 rounded-2xl bg-tertiary/15 flex items-center justify-center text-tertiary font-bold text-xl shadow-inner shrink-0 transition-all ${
+              isOnline
+                ? "border-2 border-emerald-500 shadow-sm shadow-emerald-500/25"
+                : "border-2 border-tertiary/30"
+            }`}
+          >
             {profile?.avatar ? (
               <img
                 src={profile.avatar}

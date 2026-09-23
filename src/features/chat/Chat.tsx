@@ -13,10 +13,10 @@ import { ChatThread } from "./components/ChatThread.tsx";
 import { ChatWelcome } from "./components/ChatWelcome.tsx";
 import { NewConnectModal } from "./components/NewConnectModal.tsx";
 
+import { useChatUiStore } from "./chatUiStore.ts";
+
 const Chat = () => {
-  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(
-    null,
-  );
+  const { selectedAccountId, setSelectedAccountId } = useChatUiStore();
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
 
   // Reactive contacts from Dexie IndexedDB
@@ -66,24 +66,37 @@ const Chat = () => {
   };
 
   return (
-    <div className="flex-1 flex overflow-hidden rounded-3xl border border-border bg-secondary shadow-sm">
-      <ChatSidebar
-        contacts={contacts}
-        selectedAccountId={selectedAccountId}
-        onSelectContact={(id) => setSelectedAccountId(id)}
-        onOpenConnectModal={() => setIsConnectModalOpen(true)}
-        onAcceptProposal={handleAcceptProposal}
-        onDeclineProposal={handleDeclineProposal}
-        isPeerOnline={isPeerOnline}
-      />
-
-      {selectedContact ? (
-        <ChatThread
-          contact={selectedContact}
-          isOnline={isPeerOnline(selectedContact.accountId)}
+    <div className="flex-1 flex overflow-hidden h-full w-full bg-secondary">
+      {/* Sidebar: on mobile, hidden if contact is selected. On desktop, always visible */}
+      <div
+        className={`${
+          selectedContact ? "hidden md:flex" : "flex"
+        } w-full md:w-80 lg:w-96 shrink-0 h-full flex-col`}
+      >
+        <ChatSidebar
+          contacts={contacts}
+          selectedAccountId={selectedAccountId}
+          onSelectContact={(id) => setSelectedAccountId(id)}
+          onOpenConnectModal={() => setIsConnectModalOpen(true)}
+          onAcceptProposal={handleAcceptProposal}
+          onDeclineProposal={handleDeclineProposal}
+          isPeerOnline={isPeerOnline}
         />
+      </div>
+
+      {/* Main chat thread or welcome */}
+      {selectedContact ? (
+        <div className="flex-1 flex flex-col min-w-0 h-full">
+          <ChatThread
+            contact={selectedContact}
+            isOnline={isPeerOnline(selectedContact.accountId)}
+            onBack={() => setSelectedAccountId(null)}
+          />
+        </div>
       ) : (
-        <ChatWelcome onOpenConnectModal={() => setIsConnectModalOpen(true)} />
+        <div className="hidden md:flex flex-1 h-full">
+          <ChatWelcome onOpenConnectModal={() => setIsConnectModalOpen(true)} />
+        </div>
       )}
 
       <NewConnectModal

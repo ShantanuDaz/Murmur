@@ -8,6 +8,7 @@ import {
 import {
   ProfileHeader,
   MurmurNumberCard,
+  AppearanceCard,
   DeviceIdentityCard,
   RecoveryPhraseCard,
   DangerZoneCard,
@@ -88,7 +89,10 @@ export const Profile = () => {
         onShowQr={() => setShowQrModal(true)}
       />
 
-      {/* 3. Local Device Identity & Cryptographic Health */}
+      {/* 3. Appearance & Theme (System, Dark, Light) */}
+      <AppearanceCard />
+
+      {/* 4. Local Device Identity & Cryptographic Health */}
       <DeviceIdentityCard
         device={device}
         isCertValid={isCertValid}

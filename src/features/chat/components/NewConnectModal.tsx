@@ -22,12 +22,12 @@ export const NewConnectModal = ({ isOpen, onClose }: NewConnectModalProps) => {
 
     const targetId = murmurNumber.trim();
     if (!targetId) {
-      setError("Please enter a Murmur Number.");
+      setError("Please enter a Chat ID.");
       return;
     }
 
     if (!proposalManager.isValidMurmurNumber(targetId)) {
-      setError("Murmur Number must be a valid 66-character hex ID (0x...).");
+      setError("Please enter a valid 66-character Chat ID starting with 0x.");
       return;
     }
 
@@ -39,7 +39,7 @@ export const NewConnectModal = ({ isOpen, onClose }: NewConnectModalProps) => {
       );
 
       if (!result.success) {
-        setError(result.error || "Failed to send connection request.");
+        setError(result.error || "Failed to send chat invite.");
         setIsSubmitting(false);
         return;
       }
@@ -54,9 +54,7 @@ export const NewConnectModal = ({ isOpen, onClose }: NewConnectModalProps) => {
       }, 1200);
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Unexpected error sending request.",
+        err instanceof Error ? err.message : "Unexpected error sending invite.",
       );
       setIsSubmitting(false);
     }
@@ -73,7 +71,7 @@ export const NewConnectModal = ({ isOpen, onClose }: NewConnectModalProps) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
-      <div className="bg-secondary border border-border rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-5 shadow-2xl relative">
+      <div className="bg-secondary border border-border rounded-2xl p-6 sm:p-7 max-w-md w-full space-y-5 shadow-2xl relative">
         <button
           onClick={handleClose}
           disabled={isSubmitting}
@@ -83,15 +81,15 @@ export const NewConnectModal = ({ isOpen, onClose }: NewConnectModalProps) => {
         </button>
 
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-tertiary/10 text-tertiary flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center">
             <UserPlus className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-foreground">
-              New Connection
+            <h3 className="text-base font-semibold text-foreground">
+              New Chat
             </h3>
             <p className="text-xs text-muted">
-              Connect directly using a sovereign Murmur Number.
+              Connect with a friend by entering their Chat ID.
             </p>
           </div>
         </div>
@@ -106,14 +104,14 @@ export const NewConnectModal = ({ isOpen, onClose }: NewConnectModalProps) => {
         {success && (
           <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
-            <span>Connection request queued and dispatching!</span>
+            <span>Chat invite sent successfully!</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">
-              Recipient's Murmur Number <span className="text-tertiary">*</span>
+            <label className="text-xs font-medium text-foreground">
+              Friend's Chat ID <span className="text-tertiary">*</span>
             </label>
             <input
               type="text"
@@ -129,13 +127,13 @@ export const NewConnectModal = ({ isOpen, onClose }: NewConnectModalProps) => {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">
-              Contact Nickname{" "}
+            <label className="text-xs font-medium text-foreground">
+              Name or Nickname{" "}
               <span className="text-muted font-normal">(optional)</span>
             </label>
             <input
               type="text"
-              placeholder="e.g. Alice, Work Phone"
+              placeholder="e.g. Alice"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               disabled={isSubmitting || success}
@@ -147,9 +145,9 @@ export const NewConnectModal = ({ isOpen, onClose }: NewConnectModalProps) => {
             <button
               type="submit"
               disabled={isSubmitting || success}
-              className="flex-1 py-2.5 rounded-xl bg-tertiary text-tertiary-foreground text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+              className="flex-1 py-2.5 rounded-xl bg-tertiary text-white text-xs font-semibold hover:bg-tertiary/90 transition-all disabled:opacity-50 cursor-pointer shadow-sm shadow-tertiary/20"
             >
-              {isSubmitting ? "Connecting..." : "Send Connection Request"}
+              {isSubmitting ? "Sending Invite..." : "Send Chat Invite"}
             </button>
             <button
               type="button"

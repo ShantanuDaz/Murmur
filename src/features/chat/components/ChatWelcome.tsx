@@ -1,4 +1,5 @@
-import { MessageSquare, UserPlus } from "lucide-react";
+import { Plus } from "lucide-react";
+import { LoopLogo } from "../../../components/LoopLogo.tsx";
 
 interface ChatWelcomeProps {
   onOpenConnectModal: () => void;
@@ -7,26 +8,27 @@ interface ChatWelcomeProps {
 export const ChatWelcome = ({ onOpenConnectModal }: ChatWelcomeProps) => {
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-4 bg-primary">
-      <div className="w-16 h-16 rounded-3xl bg-secondary border border-border flex items-center justify-center text-tertiary shadow-sm">
-        <MessageSquare className="w-8 h-8" />
-      </div>
+      <LoopLogo
+        className="w-16 h-16 shadow-lg shadow-tertiary/25"
+        variant="squircle"
+      />
 
       <div className="space-y-1.5 max-w-sm">
-        <h3 className="text-base font-bold text-foreground">
-          Sovereign Peer-to-Peer Communication
+        <h3 className="text-lg font-semibold text-foreground tracking-tight">
+          Welcome to Loop
         </h3>
         <p className="text-xs text-muted leading-relaxed">
-          Connect with friends by entering their Murmur Number. Messages and
-          calls travel directly peer-to-peer with local-first persistence.
+          Simple, fast, and completely private messaging. Select a contact on
+          the left or start a new conversation.
         </p>
       </div>
 
       <button
         onClick={onOpenConnectModal}
-        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-tertiary text-tertiary-foreground text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer shadow-sm"
+        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-tertiary text-white text-xs font-medium hover:bg-tertiary/90 transition-all cursor-pointer shadow-sm shadow-tertiary/20"
       >
-        <UserPlus className="w-4 h-4" />
-        <span>Connect with Murmur Number</span>
+        <Plus className="w-4 h-4" />
+        <span>Start a New Chat</span>
       </button>
     </div>
   );

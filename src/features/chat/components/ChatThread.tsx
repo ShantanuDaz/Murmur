@@ -19,9 +19,10 @@ import { ChatInput } from "./ChatInput.tsx";
 interface ChatThreadProps {
   contact: Contact;
   isOnline: boolean;
+  onBack?: () => void;
 }
 
-export const ChatThread = ({ contact, isOnline }: ChatThreadProps) => {
+export const ChatThread = ({ contact, isOnline, onBack }: ChatThreadProps) => {
   const currentDevice = useAuth((state) => state.device);
   const myAccountId = currentDevice?.accountId.toLowerCase() || "";
   const peerAccountId = contact.accountId.toLowerCase();
@@ -53,28 +54,28 @@ export const ChatThread = ({ contact, isOnline }: ChatThreadProps) => {
 
   return (
     <div className="flex-1 flex flex-col h-full min-w-0 bg-primary">
-      <ChatHeader contact={contact} isOnline={isOnline} />
+      <ChatHeader contact={contact} isOnline={isOnline} onBack={onBack} />
 
       {/* Message List */}
-      <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-3 flex flex-col">
+      <div className="flex-1 p-4 sm:p-5 overflow-y-auto space-y-2.5 flex flex-col">
         {messages.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-2.5 max-w-sm mx-auto">
-            <div className="w-10 h-10 rounded-2xl bg-tertiary/10 text-tertiary flex items-center justify-center">
+          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-2 max-w-xs mx-auto">
+            <div className="w-11 h-11 rounded-2xl bg-tertiary/10 text-tertiary flex items-center justify-center">
               <MessageSquare className="w-5 h-5" />
             </div>
-            <h4 className="text-xs font-semibold text-foreground">
-              Encrypted Channel Ready
+            <h4 className="text-sm font-semibold text-foreground">
+              Direct Encrypted Chat
             </h4>
-            <p className="text-[11px] text-muted leading-relaxed">
-              Messages to{" "}
+            <p className="text-xs text-muted leading-relaxed">
+              Say hello to{" "}
               <span className="text-foreground font-medium">
                 {contact.name}
-              </span>{" "}
-              travel directly peer-to-peer with local-first outbox delivery.
+              </span>
+              ! Your messages are sent directly between your devices.
             </p>
           </div>
         ) : (
-          <div className="space-y-3 flex flex-col">
+          <div className="space-y-2.5 flex flex-col">
             {messages.map((msg) => {
               const isOutgoing =
                 msg.senderAccountId.toLowerCase() === myAccountId;
@@ -94,17 +95,6 @@ export const ChatThread = ({ contact, isOnline }: ChatThreadProps) => {
       </div>
 
       <div className="mt-auto shrink-0">
-        {isOnline && (
-          <div className="px-6 py-1.5 bg-emerald-500/5 border-t border-emerald-500/10 flex items-center justify-between text-[11px]">
-            <span className="text-emerald-400 font-mono inline-flex items-center gap-1.5 text-[10px]">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Direct WebRTC data channel active
-            </span>
-            <span className="text-[10px] text-muted font-mono">
-              Zero hop • Instant delivery
-            </span>
-          </div>
-        )}
         <ChatInput
           onSendMessage={handleSendMessage}
           placeholder={`Message ${contact.name}...`}

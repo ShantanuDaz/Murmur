@@ -2,6 +2,7 @@ import { ed25519, x25519 } from "@noble/curves/ed25519.js";
 import { bytesToHex, hexToBytes } from "@noble/curves/utils.js";
 import type { DeviceIdentity } from "../../features/auth/authTypes.ts";
 import type { DeviceCreationResult, DeviceKeypairs } from "./types.ts";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Generates fresh, random Ed25519 (signing) and X25519 (encryption) keypairs
@@ -66,7 +67,7 @@ export const createDeviceCertificate = (params: {
   isPrimary?: boolean;
 }): DeviceCreationResult => {
   const keypairs = generateDeviceKeypairs();
-  const deviceId = crypto.randomUUID();
+  const deviceId = uuidv4();
   const deviceName = params.deviceName?.trim() || "Default Device";
   const createdAt = Date.now();
   const isPrimary = params.isPrimary ?? true;

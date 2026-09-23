@@ -25,7 +25,7 @@ export const StepGenerate = () => {
 
   const handleDownload = () => {
     const backupText = `=====================================================
-MURMUR SOVEREIGN IDENTITY BACKUP
+LOOP ACCOUNT BACKUP PHRASE
 Created: ${new Date().toLocaleString()}
 =====================================================
 
@@ -34,14 +34,13 @@ ${mnemonic}
 
 =====================================================
 SECURITY WARNING:
-- Keep this file completely private and stored offline.
-- Never upload this file to cloud storage or send it online.
-- Anyone with these 24 words has full control of your account.
+- Keep this recovery phrase completely private and stored offline.
+- Anyone with these 24 words can access your messages and contacts.
 =====================================================`;
 
     downloadFile(
       backupText,
-      "murmur-recovery-phrase.txt",
+      "loop-recovery-phrase.txt",
       "text/plain;charset=utf-8",
     );
   };

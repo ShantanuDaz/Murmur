@@ -1,6 +1,12 @@
 @import "tailwindcss";
 
 @theme {
+  --font-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
+
   --color-primary: var(--primary); /* Canvas / Page background */
   --color-secondary: var(--secondary); /* Cards / elevated containers */
   --color-surface: var(--surface); /* Inputs & inner pill backgrounds */
@@ -12,52 +18,50 @@
     --foreground-secondary
   ); /* Subheadings, labels, secondary text */
   --color-muted: var(--muted); /* Secondary / placeholder text */
-  --color-tertiary: var(--tertiary); /* Brand accent (Golden Toasted Murmura) */
+  --color-tertiary: var(--tertiary); /* Brand accent (Telegram Royal Cobalt) */
   --color-tertiary-foreground: var(
     --tertiary-foreground
   ); /* High-contrast text on brand accent */
   --color-destructive: var(--destructive); /* Error / danger / logout */
   --color-success: var(--success); /* Success / connected indicator */
-  --color-accent-info: var(
-    --accent-info
-  ); /* Key highlight & cryptographic badge */
+  --color-accent-info: var(--accent-info); /* Info highlight & telemetry */
   --color-warning: var(--warning); /* Connecting ping & warning notices */
 }
 
-/* Light Theme (Crisp Puffed Rice & Warm Ivory) */
+/* Light Theme (Clean Crisp Messenger) */
 :root {
   color-scheme: light;
-  --primary: #faf8f5; /* Warm puffed rice cream */
-  --secondary: #ffffff; /* Clean card surface */
-  --surface: #f4efe6; /* Inset warm puffed rice surface */
-  --border-color: #e8e2d8; /* Soft toasted grain border */
-  --foreground: #1c1917; /* Warm stone-900 / dark roasted charcoal */
-  --foreground-secondary: #44403c; /* Warm stone-700 */
-  --muted: #78716c; /* Warm stone-500 gray */
-  --tertiary: #d97706; /* Warm roasted golden amber / turmeric honey */
-  --tertiary-foreground: #ffffff; /* High contrast white on amber */
-  --destructive: #dc2626; /* Warm red-600 */
-  --success: #16a34a; /* Warm green-600 */
-  --accent-info: #0891b2; /* Cyan-600 */
-  --warning: #d97706; /* Amber-600 */
+  --primary: #ffffff; /* Crisp white canvas */
+  --secondary: #f8fafc; /* Soft slate-50 cards & sidebar */
+  --surface: #f1f5f9; /* Inset slate-100 surfaces & inputs */
+  --border-color: #e2e8f0; /* Thin slate-200 dividers */
+  --foreground: #0f172a; /* Slate-900 high contrast text */
+  --foreground-secondary: #334155; /* Slate-700 secondary text */
+  --muted: #64748b; /* Slate-500 muted text & timestamps */
+  --tertiary: #2563eb; /* Telegram Royal Cobalt */
+  --tertiary-foreground: #ffffff; /* Crisp white on cobalt */
+  --destructive: #ef4444; /* Red-500 */
+  --success: #10b981; /* Emerald-500 online/delivered */
+  --accent-info: #0284c7; /* Sky-600 */
+  --warning: #f59e0b; /* Amber-500 */
 }
 
-/* Dark Theme (Roasted Earthen Hearth & Golden Glow) */
+/* Dark Theme (Telegram Midnight Slate & Royal Cobalt) */
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    --primary: #12100e; /* Warm roasted night / dark earthen charcoal */
-    --secondary: #1c1917; /* Warm stone-900 card surface */
-    --surface: #161311; /* Deep roasted inset surface */
-    --border-color: #2e2824; /* Subtle roasted grain border */
-    --foreground: #f5f5f4; /* Warm stone-100 */
-    --foreground-secondary: #d6d3d1; /* Warm stone-300 */
-    --muted: #a8a29e; /* Warm stone-400 muted text */
-    --tertiary: #f59e0b; /* Glowing golden toasted grain */
-    --tertiary-foreground: #12100e; /* High contrast dark charcoal on glowing amber */
+    --primary: #0b0f19; /* Deep midnight obsidian */
+    --secondary: #111827; /* Midnight slate-900 cards & sidebar */
+    --surface: #1e293b; /* Slate-800 inset surface & inputs */
+    --border-color: #243042; /* Subtle slate border */
+    --foreground: #f8fafc; /* Slate-50 high contrast text */
+    --foreground-secondary: #cbd5e1; /* Slate-300 secondary text */
+    --muted: #94a3b8; /* Slate-400 muted text & timestamps */
+    --tertiary: #2563eb; /* Vibrant Cobalt */
+    --tertiary-foreground: #ffffff; /* Crisp white on cobalt */
     --destructive: #f87171; /* Red-400 */
-    --success: #34d399; /* Emerald-400 */
-    --accent-info: #22d3ee; /* Cyan-400 */
+    --success: #10b981; /* Emerald-500 presence indicator */
+    --accent-info: #38bdf8; /* Sky-400 */
     --warning: #fbbf24; /* Amber-400 */
   }
 }
@@ -65,39 +69,61 @@
 /* Manual Theme Class Overrides */
 .dark {
   color-scheme: dark;
-  --primary: #12100e;
-  --secondary: #1c1917;
-  --surface: #161311;
-  --border-color: #2e2824;
-  --foreground: #f5f5f4;
-  --foreground-secondary: #d6d3d1;
-  --muted: #a8a29e;
-  --tertiary: #f59e0b;
-  --tertiary-foreground: #12100e;
+  --primary: #0b0f19;
+  --secondary: #111827;
+  --surface: #1e293b;
+  --border-color: #243042;
+  --foreground: #f8fafc;
+  --foreground-secondary: #cbd5e1;
+  --muted: #94a3b8;
+  --tertiary: #2563eb;
+  --tertiary-foreground: #ffffff;
   --destructive: #f87171;
-  --success: #34d399;
-  --accent-info: #22d3ee;
+  --success: #10b981;
+  --accent-info: #38bdf8;
   --warning: #fbbf24;
 }
 
 .light {
   color-scheme: light;
-  --primary: #faf8f5;
-  --secondary: #ffffff;
-  --surface: #f4efe6;
-  --border-color: #e8e2d8;
-  --foreground: #1c1917;
-  --foreground-secondary: #44403c;
-  --muted: #78716c;
-  --tertiary: #d97706;
+  --primary: #ffffff;
+  --secondary: #f8fafc;
+  --surface: #f1f5f9;
+  --border-color: #e2e8f0;
+  --foreground: #0f172a;
+  --foreground-secondary: #334155;
+  --muted: #64748b;
+  --tertiary: #2563eb;
   --tertiary-foreground: #ffffff;
-  --destructive: #dc2626;
-  --success: #16a34a;
-  --accent-info: #0891b2;
-  --warning: #d97706;
+  --destructive: #ef4444;
+  --success: #10b981;
+  --accent-info: #0284c7;
+  --warning: #f59e0b;
 }
 
 body {
+  font-family: var(--font-sans);
   color: var(--foreground);
   background-color: var(--primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Sleek Scrollbar for Modern Messengers */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.4);
 }

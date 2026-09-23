@@ -1,87 +1,91 @@
-import { Copy, CheckCheck, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import { ShieldCheck, ArrowLeft } from "lucide-react";
 import type { Contact } from "../../../services/storage/contacts.ts";
-import { useCopyToClipboard } from "../../../hooks/useCopyToClipboard.ts";
+import { ContactDetailsModal } from "./ContactDetailsModal.tsx";
 
 interface ChatHeaderProps {
   contact: Contact;
   isOnline: boolean;
+  onBack?: () => void;
 }
 
-export const ChatHeader = ({ contact, isOnline }: ChatHeaderProps) => {
-  const { copy, copied } = useCopyToClipboard();
+export const ChatHeader = ({ contact, isOnline, onBack }: ChatHeaderProps) => {
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   return (
-    <div className="px-6 py-3.5 border-b border-border bg-secondary/40 flex items-center justify-between shrink-0">
-      <div className="flex items-center gap-3 min-w-0">
-        <div className="relative shrink-0">
-          <div
-            className={`w-10 h-10 rounded-full bg-secondary border flex items-center justify-center font-bold text-foreground text-xs transition-all ${
-              isOnline
-                ? "border-emerald-500/40 ring-2 ring-emerald-500/20"
-                : "border-border"
-            }`}
-          >
-            {contact.name.slice(0, 1).toUpperCase()}
-          </div>
-          <span
-            className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-secondary transition-colors ${
-              isOnline
-                ? "bg-emerald-400 ring-2 ring-emerald-400/30"
-                : "bg-neutral-500"
-            }`}
-          />
-        </div>
-
-        <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <h3 className="text-xs font-bold text-foreground truncate">
-              {contact.name}
-            </h3>
-            {isOnline ? (
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Active WebRTC Link
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface border border-border text-muted text-[10px] font-mono">
-                Offline
-              </span>
-            )}
-          </div>
-
-          <div className="flex items-center gap-1.5 text-[10px] text-muted font-mono truncate mt-0.5">
-            <span>
-              {contact.accountId.slice(0, 10)}...{contact.accountId.slice(-6)}
-            </span>
+    <>
+      <div className="px-3 sm:px-4 py-2.5 border-b border-border bg-secondary/80 backdrop-blur-sm flex items-center justify-between shrink-0 gap-2">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          {onBack && (
             <button
-              onClick={() => copy(contact.accountId)}
-              className="hover:text-foreground transition-colors p-0.5 cursor-pointer shrink-0"
-              title="Copy Murmur Number"
+              onClick={onBack}
+              className="md:hidden p-1.5 -ml-1 text-muted hover:text-foreground rounded-lg hover:bg-surface transition-colors cursor-pointer shrink-0"
+              title="Back to chats"
             >
-              {copied ? (
-                <CheckCheck className="w-3 h-3 text-emerald-400" />
-              ) : (
-                <Copy className="w-3 h-3" />
-              )}
+              <ArrowLeft className="w-5 h-5" />
             </button>
-            <span className="text-muted/40">•</span>
-            {isOnline ? (
-              <span className="text-emerald-400/90 font-medium">
-                Direct P2P session open
-              </span>
-            ) : (
-              <span>Auto-connects on send</span>
-            )}
+          )}
+
+          {/* Clickable Contact Avatar & Name -> Opens Contact Details */}
+          <button
+            onClick={() => setShowDetailsModal(true)}
+            className="flex items-center gap-2.5 min-w-0 flex-1 text-left cursor-pointer group hover:opacity-90 transition-opacity"
+            title="View contact info"
+          >
+            <div className="relative shrink-0">
+              <div
+                className={`w-9 h-9 rounded-full bg-surface border flex items-center justify-center font-bold text-foreground text-xs transition-all group-hover:scale-105 ${
+                  isOnline ? "border-emerald-500/40" : "border-border"
+                }`}
+              >
+                {contact.name.slice(0, 1).toUpperCase()}
+              </div>
+              <span
+                className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-secondary transition-colors ${
+                  isOnline ? "bg-emerald-500" : "bg-slate-400 dark:bg-slate-600"
+                }`}
+              />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <h3 className="text-xs sm:text-sm font-semibold text-foreground truncate group-hover:text-tertiary transition-colors">
+                {contact.name}
+              </h3>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                {isOnline ? (
+                  <span className="text-[11px] font-medium text-emerald-500 inline-flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    online
+                  </span>
+                ) : (
+                  <span className="text-[11px] text-muted">offline</span>
+                )}
+              </div>
+            </div>
+          </button>
+        </div>
+
+        {/* Security badge: compact icon on tight screens, text on wide screens */}
+        <div className="flex items-center shrink-0">
+          <div
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface border border-border/80 text-muted"
+            title="End-to-End Encrypted Peer Connection"
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+            <span className="text-[11px] font-medium hidden lg:inline">
+              Encrypted
+            </span>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 shrink-0">
-        <span className="hidden sm:flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full bg-surface border border-border text-muted font-mono">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-          <span>E2EE Certified</span>
-        </span>
-      </div>
-    </div>
+      {/* Contact Details Modal */}
+      <ContactDetailsModal
+        isOpen={showDetailsModal}
+        onClose={() => setShowDetailsModal(false)}
+        contact={contact}
+        isOnline={isOnline}
+      />
+    </>
   );
 };

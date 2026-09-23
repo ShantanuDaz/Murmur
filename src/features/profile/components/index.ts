@@ -3,6 +3,7 @@ export * from "./MurmurNumberCard.tsx";
 export * from "./DeviceIdentityCard.tsx";
 export * from "./RecoveryPhraseCard.tsx";
 export * from "./DangerZoneCard.tsx";
+export * from "./AppearanceCard.tsx";
 export * from "./QrCodeModal.tsx";
 export * from "./SeedPhraseModal.tsx";
 export * from "./LogoutConfirmModal.tsx";

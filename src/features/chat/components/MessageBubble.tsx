@@ -14,38 +14,42 @@ export const MessageBubble = ({ message, isOutgoing }: MessageBubbleProps) => {
 
   return (
     <div
-      className={`flex flex-col ${isOutgoing ? "items-end" : "items-start"} max-w-[85%] sm:max-w-[70%]`}
+      className={`flex flex-col ${isOutgoing ? "items-end" : "items-start"} max-w-[85%] sm:max-w-[70%] group`}
     >
       <div
-        className={`px-4 py-2.5 rounded-2xl text-xs break-words shadow-xs ${
+        className={`px-3 py-1.5 rounded-2xl text-[13px] break-words shadow-xs relative transition-all ${
           isOutgoing
-            ? "bg-tertiary text-tertiary-foreground rounded-br-xs"
-            : "bg-surface border border-border text-foreground rounded-bl-xs"
+            ? "bg-tertiary text-white rounded-tr-xs"
+            : "bg-surface border border-border/80 text-foreground rounded-tl-xs"
         }`}
       >
-        <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
-      </div>
+        <div className="flex items-end gap-2 flex-wrap justify-end">
+          <p className="whitespace-pre-wrap leading-relaxed select-text font-normal mr-auto">
+            {message.content}
+          </p>
 
-      <div
-        className={`flex items-center gap-1 mt-1 text-[10px] text-muted ${
-          isOutgoing ? "justify-end" : "justify-start"
-        }`}
-      >
-        <span>{timeFormatted}</span>
+          <div
+            className={`flex items-center gap-1 text-[10px] select-none shrink-0 self-end -mb-0.5 ${
+              isOutgoing ? "text-white/80" : "text-muted"
+            }`}
+          >
+            <span className="tracking-tight">{timeFormatted}</span>
 
-        {isOutgoing && (
-          <span title={message.status}>
-            {message.status === "pending" && (
-              <Clock className="w-3 h-3 text-amber-400 animate-pulse" />
+            {isOutgoing && (
+              <span title={message.status} className="inline-flex items-center">
+                {message.status === "pending" && (
+                  <Clock className="w-3 h-3 text-amber-300 animate-pulse" />
+                )}
+                {message.status === "delivered" && (
+                  <Check className="w-3.5 h-3.5 text-white/90" />
+                )}
+                {message.status === "read" && (
+                  <CheckCheck className="w-3.5 h-3.5 text-sky-200" />
+                )}
+              </span>
             )}
-            {message.status === "delivered" && (
-              <Check className="w-3 h-3 text-emerald-400" />
-            )}
-            {message.status === "read" && (
-              <CheckCheck className="w-3 h-3 text-emerald-400" />
-            )}
-          </span>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );
