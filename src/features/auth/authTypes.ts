@@ -16,6 +16,11 @@ export interface Profile {
   avatar: string | null;
 }
 
+export interface LocalDeviceKeys {
+  signingPrivateKey: Uint8Array;
+  encryptionPrivateKey: Uint8Array;
+}
+
 export interface AuthState {
   isIdentityExists: boolean | null; // null = uninitialized, true = registered, false = onboarding needed
   isLoading: boolean;
@@ -23,9 +28,16 @@ export interface AuthState {
   device: DeviceIdentity | null;
   profile: Profile | null;
 
-  initialize: () => Promise<void>;
+  initialize: (force?: boolean) => Promise<void>;
   setDevice: (device: DeviceIdentity | null) => void;
   setProfile: (profile: Profile | null) => void;
+  setIdentity: (params: {
+    device: DeviceIdentity;
+    profile: Profile;
+    deviceKeys: LocalDeviceKeys;
+    mnemonic: string | null;
+  }) => void;
   getMnemonic: () => string | null;
+  getDeviceKeys: () => LocalDeviceKeys | null;
   logout: () => void;
 }

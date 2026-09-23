@@ -1,12 +1,12 @@
 import { create } from "zustand";
 import useAuth from "../store/authStore.ts";
-import { setStorageItem } from "../../../utils/storage.ts";
 import {
   generateNewMnemonic,
   isValidMnemonic,
   deriveMasterAccount,
   createDeviceCertificate,
 } from "../../../services/crypto/index.ts";
+import { saveLocalIdentity } from "../../../services/storage/index.ts";
 
 export type OnboardingStep = "welcome" | "generate" | "restore" | "profile";
 
@@ -115,29 +115,37 @@ export const useOnboarding = create<OnboardingState>((set, get) => ({
       const master = deriveMasterAccount(mnemonic.trim());
 
       // 2. Generate Device Keypairs and Master-Signed Certificate as primary device
-      const { device } = createDeviceCertificate({
+      const { device, privateKeys } = createDeviceCertificate({
         masterPrivateKey: master.masterPrivateKey,
         accountId: master.accountId,
         deviceName: deviceName.trim() || getDefaultDeviceName(),
         isPrimary: true,
       });
 
-      // 3. Store 24-word root seed locally on this primary device
-      setStorageItem("mnemonic", mnemonic.trim());
-
-      // 4. Commit Device Identity to Auth Store
-      const auth = useAuth.getState();
-      auth.setDevice(device);
-
-      // 5. Commit Profile Metadata to Auth Store
-      auth.setProfile({
+      const profile = {
         name: name.trim(),
         bio: bio.trim() || null,
         avatar,
         age: null,
+      };
+
+      // 3. Persist complete atomic identity directly into Dexie IndexedDB
+      await saveLocalIdentity({
+        profile,
+        device,
+        deviceKeys: privateKeys,
+        mnemonic: mnemonic.trim(),
       });
 
-      // 6. Zero out transient onboarding state
+      // 4. Update live Auth Store state immediately
+      useAuth.getState().setIdentity({
+        device,
+        profile,
+        deviceKeys: privateKeys,
+        mnemonic: mnemonic.trim(),
+      });
+
+      // 5. Zero out transient onboarding wizard state
       set({ ...initialState });
 
       return true;

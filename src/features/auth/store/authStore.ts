@@ -1,11 +1,14 @@
 import { create } from "zustand";
-import type { AuthState } from "../authTypes.ts";
-import { isValidDevice, isValidProfile } from "../utils.ts";
+import type { AuthState, LocalDeviceKeys } from "../authTypes.ts";
 import {
-  getStorageItem,
-  setStorageItem,
-  removeStorageItem,
-} from "../../../utils/storage.ts";
+  loadLocalIdentity,
+  updateLocalProfile,
+  clearLocalIdentity,
+  db,
+} from "../../../services/storage/index.ts";
+
+let inMemoryKeys: LocalDeviceKeys | null = null;
+let inMemoryMnemonic: string | null = null;
 
 const useAuth = create<AuthState>((set, get) => ({
   isIdentityExists: null,
@@ -14,15 +17,17 @@ const useAuth = create<AuthState>((set, get) => ({
   device: null,
   profile: null,
 
-  initialize: async () => {
-    // If already initialized and not currently loading, skip duplicate work
-    if (get().isIdentityExists !== null && !get().isLoading) return;
+  initialize: async (force = false) => {
+    // If already initialized and not currently loading, skip duplicate work unless forced
+    if (!force && get().isIdentityExists !== null && !get().isLoading) return;
 
     try {
       set({ isLoading: true });
 
-      const device = getStorageItem("device", isValidDevice);
-      if (!device) {
+      const loaded = await loadLocalIdentity();
+      if (!loaded) {
+        inMemoryKeys = null;
+        inMemoryMnemonic = null;
         set({
           isIdentityExists: false,
           isPrimaryDevice: false,
@@ -32,17 +37,19 @@ const useAuth = create<AuthState>((set, get) => ({
         return;
       }
 
-      const profile = getStorageItem("profile", isValidProfile);
-      const mnemonic = getStorageItem<string>("mnemonic");
+      inMemoryKeys = loaded.deviceKeys;
+      inMemoryMnemonic = loaded.mnemonic;
 
       set({
         isIdentityExists: true,
-        isPrimaryDevice: Boolean(mnemonic),
-        device,
-        profile,
+        isPrimaryDevice: loaded.isPrimary,
+        device: loaded.device,
+        profile: loaded.profile,
       });
     } catch (error) {
-      console.error("Failed to initialize auth store:", error);
+      console.error("Failed to initialize auth store from Dexie:", error);
+      inMemoryKeys = null;
+      inMemoryMnemonic = null;
       set({
         isIdentityExists: false,
         isPrimaryDevice: false,
@@ -55,28 +62,44 @@ const useAuth = create<AuthState>((set, get) => ({
   },
 
   setDevice: (device) => {
-    setStorageItem("device", device);
-    const mnemonic = getStorageItem<string>("mnemonic");
     set({
       device,
       isIdentityExists: Boolean(device),
-      isPrimaryDevice: Boolean(mnemonic),
+      isPrimaryDevice: Boolean(inMemoryMnemonic),
     });
   },
 
   setProfile: (profile) => {
-    setStorageItem("profile", profile);
+    if (profile) {
+      void updateLocalProfile(profile);
+    }
     set({ profile });
   },
 
+  setIdentity: (params) => {
+    inMemoryKeys = params.deviceKeys;
+    inMemoryMnemonic = params.mnemonic;
+    set({
+      device: params.device,
+      profile: params.profile,
+      isIdentityExists: true,
+      isPrimaryDevice: Boolean(params.mnemonic),
+    });
+  },
+
   getMnemonic: () => {
-    return getStorageItem<string>("mnemonic");
+    return inMemoryMnemonic;
+  },
+
+  getDeviceKeys: () => {
+    return inMemoryKeys;
   },
 
   logout: () => {
-    removeStorageItem("device");
-    removeStorageItem("profile");
-    removeStorageItem("mnemonic");
+    inMemoryKeys = null;
+    inMemoryMnemonic = null;
+    void clearLocalIdentity();
+    void db.clearAll();
     set({
       isIdentityExists: false,
       isPrimaryDevice: false,

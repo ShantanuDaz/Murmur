@@ -16,10 +16,18 @@ export interface DeviceKeypairs {
   encryptionPrivateKey: Uint8Array;
 }
 
+export interface LocalDeviceKeys {
+  signingPrivateKey: Uint8Array;
+  encryptionPrivateKey: Uint8Array;
+}
+
+export interface StoredDeviceKeys {
+  deviceId: string;
+  signingPrivateKey: string; // 0x... hex-encoded Ed25519 private key
+  encryptionPrivateKey: string; // 0x... hex-encoded X25519 private key
+}
+
 export interface DeviceCreationResult {
   device: DeviceIdentity;
-  privateKeys: {
-    signingPrivateKey: Uint8Array;
-    encryptionPrivateKey: Uint8Array;
-  };
+  privateKeys: LocalDeviceKeys;
 }

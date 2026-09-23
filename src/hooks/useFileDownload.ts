@@ -32,7 +32,7 @@ export const useFileDownload = () => {
             ? filenameOrOptions
             : filenameOrOptions.filename;
 
-        let mimeType =
+        const mimeType =
           typeof filenameOrOptions === "object"
             ? filenameOrOptions.mimeType
             : optionalMimeType;
