@@ -8,7 +8,7 @@ interface NewConnectModalProps {
 }
 
 export const NewConnectModal = ({ isOpen, onClose }: NewConnectModalProps) => {
-  const [murmurNumber, setMurmurNumber] = useState("");
+  const [chatId, setChatId] = useState("");
   const [nickname, setNickname] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +20,7 @@ export const NewConnectModal = ({ isOpen, onClose }: NewConnectModalProps) => {
     e.preventDefault();
     setError(null);
 
-    const targetId = murmurNumber.trim();
+    const targetId = chatId.trim();
     if (!targetId) {
       setError("Please enter a Chat ID.");
       return;
@@ -48,7 +48,7 @@ export const NewConnectModal = ({ isOpen, onClose }: NewConnectModalProps) => {
       setTimeout(() => {
         setIsSubmitting(false);
         setSuccess(false);
-        setMurmurNumber("");
+        setChatId("");
         setNickname("");
         onClose();
       }, 1200);
@@ -64,7 +64,7 @@ export const NewConnectModal = ({ isOpen, onClose }: NewConnectModalProps) => {
     if (isSubmitting) return;
     setError(null);
     setSuccess(false);
-    setMurmurNumber("");
+    setChatId("");
     setNickname("");
     onClose();
   };
@@ -116,9 +116,9 @@ export const NewConnectModal = ({ isOpen, onClose }: NewConnectModalProps) => {
             <input
               type="text"
               placeholder="0x..."
-              value={murmurNumber}
+              value={chatId}
               onChange={(e) => {
-                setMurmurNumber(e.target.value);
+                setChatId(e.target.value);
                 setError(null);
               }}
               disabled={isSubmitting || success}

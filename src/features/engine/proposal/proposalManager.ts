@@ -15,7 +15,7 @@ class ProposalManager {
   private isWatcherRunning = false;
 
   /**
-   * Validates a Murmur Number (0x + 64 hex characters).
+   * Validates a Loop ID / Murmur Number (0x + 64 hex characters).
    */
   public isValidMurmurNumber(id: string): boolean {
     if (!id || typeof id !== "string") return false;
@@ -23,8 +23,12 @@ class ProposalManager {
     return /^0x[0-9a-f]{64}$/.test(trimmed);
   }
 
+  public isValidLoopId(id: string): boolean {
+    return this.isValidMurmurNumber(id);
+  }
+
   /**
-   * Initiates a new connection request to a target Murmur Number:
+   * Initiates a new connection request to a target Chat ID:
    * 1. Validates account ID format & checks not self.
    * 2. Saves contact to Dexie as 'pending_outgoing'.
    * 3. Immediately fires an outgoing rendezvous attempt.
@@ -38,7 +42,7 @@ class ProposalManager {
     if (!this.isValidMurmurNumber(normTarget)) {
       return {
         success: false,
-        error: "Invalid Murmur Number. Must be a 66-character hex ID (0x...).",
+        error: "Invalid Chat ID. Must be a 66-character hex ID (0x...).",
       };
     }
 
@@ -53,7 +57,7 @@ class ProposalManager {
     if (device.accountId.toLowerCase() === normTarget) {
       return {
         success: false,
-        error: "You cannot connect with your own Murmur Number.",
+        error: "You cannot connect with your own Chat ID.",
       };
     }
 

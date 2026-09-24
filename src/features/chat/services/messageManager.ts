@@ -64,7 +64,7 @@ class MessageManager {
     }
 
     try {
-      const room = joinRoom({ appId: "murmur-app" }, normPeer);
+      const room = joinRoom({ appId: "loop-app" }, normPeer);
       this.activeRooms.set(normPeer, room);
 
       const handshakeAction = room.makeAction<string>("device-handshake");
@@ -164,7 +164,7 @@ class MessageManager {
             const proposal: ConnectionProposal = {
               senderAccountId: device.accountId,
               senderProfile: {
-                name: auth.profile?.name || "Murmur User",
+                name: auth.profile?.name || "Loop User",
                 avatar: auth.profile?.avatar || null,
                 bio: auth.profile?.bio || null,
               },

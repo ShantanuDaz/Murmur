@@ -46,7 +46,7 @@ Anyone with this phrase has full ownership of your identity.
 ======================================================`;
 
     downloadFile(fileContent, {
-      filename: `murmur-identity-backup-${accountId.slice(0, 10)}.txt`,
+      filename: `loop-identity-backup-${accountId.slice(0, 10)}.txt`,
       mimeType: "text/plain",
     });
   };

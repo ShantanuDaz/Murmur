@@ -1,4 +1,4 @@
-# 🎙️ Murmur
+# 🔁 Loop
 
 > **100% Serverless, Decentralized, Sovereign Peer-to-Peer Chat & Calling Web Application**  
 > _Zero Central Servers • Ephemeral Matchmaking • Local-First Storage • Direct WebRTC_
@@ -7,7 +7,7 @@
 
 ## 📖 Overview & Philosophy
 
-**Murmur** is a private, serverless, decentralized, local-first peer-to-peer web communication platform. It delivers real-time messaging, direct chat, contact requests, and audio/video calling entirely within the browser without requiring central application servers, user accounts databases, or hosted communication middleware.
+**Loop** is a private, serverless, decentralized, local-first peer-to-peer web communication platform. It delivers real-time messaging, direct chat, contact requests, and audio/video calling entirely within the browser without requiring central application servers, user accounts databases, or hosted communication middleware.
 
 ### Core Invariants:
 

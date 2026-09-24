@@ -80,7 +80,7 @@ class MyRoomManager {
       this.currentSigningPrivateKey = signingPrivateKey;
 
       // Join Trystero room keyed to our canonical Murmur Number
-      const room = joinRoom({ appId: "murmur-app" }, accountId);
+      const room = joinRoom({ appId: "loop-app" }, accountId);
       this.currentRoom = room;
 
       const handshakeAction = room.makeAction<string>("device-handshake");
