@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from "react";
-import { Navigate } from "react-router";
 import useAuth from "./store/authStore";
+import { Login } from "./Login.tsx";
 import { Loader2 } from "lucide-react";
 
 interface AuthProps {
@@ -26,7 +26,7 @@ export const Auth = ({ children }: AuthProps) => {
   }
 
   if (!isIdentityExists) {
-    return <Navigate to="/login" replace />;
+    return <Login />;
   }
 
   return <>{children}</>;

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Navigate } from "react-router";
 import useAuth from "./store/authStore.ts";
 import {
   useOnboarding,
@@ -29,9 +28,9 @@ export const Login = () => {
     );
   }
 
-  // Already authenticated / device exists -> redirect to home
+  // Already authenticated / device exists -> Auth wrapper will render App
   if (isIdentityExists) {
-    return <Navigate to="/" replace />;
+    return null;
   }
 
   return (

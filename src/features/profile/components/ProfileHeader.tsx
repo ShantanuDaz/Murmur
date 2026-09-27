@@ -1,7 +1,6 @@
 import { useState } from "react";
 import type { Profile } from "../../auth/authTypes.ts";
 import { ShieldCheck, Edit3, Save } from "lucide-react";
-import { useMyRoom } from "../../../features/engine";
 
 interface ProfileHeaderProps {
   profile: Profile | null;
@@ -14,8 +13,7 @@ export const ProfileHeader = ({
   isPrimary,
   onSaveProfile,
 }: ProfileHeaderProps) => {
-  const { status } = useMyRoom();
-  const isOnline = status === "connected";
+  const isOnline = Boolean(profile?.name);
   const [isEditing, setIsEditing] = useState(false);
   const [nameInput, setNameInput] = useState(profile?.name || "");
   const [bioInput, setBioInput] = useState(profile?.bio || "");

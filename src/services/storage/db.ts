@@ -4,7 +4,7 @@ import type { StoredLocalIdentity } from "./identity.ts";
 import type { Room } from "./rooms.ts";
 import type { Message } from "./messages.ts";
 
-export class MurmurDatabase extends Dexie {
+export class LoopDatabase extends Dexie {
   contacts!: Table<Contact, string>;
   identity!: Table<StoredLocalIdentity, string>;
   rooms!: Table<Room, string>;
@@ -18,6 +18,9 @@ export class MurmurDatabase extends Dexie {
       rooms: "roomId, peerAccountId, lastMessageTimestamp",
       messages:
         "id, roomId, senderAccountId, recipientAccountId, status, timestamp, [roomId+timestamp], [recipientAccountId+status]",
+    });
+    this.version(2).stores({
+      contacts: "contactID, accountId, status, createdAt, updatedAt",
     });
   }
 
@@ -34,4 +37,4 @@ export class MurmurDatabase extends Dexie {
   }
 }
 
-export const db = new MurmurDatabase();
+export const db = new LoopDatabase();

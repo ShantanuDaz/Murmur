@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { useNavigate } from "react-router";
 import useAuth from "../auth/store/authStore.ts";
 import {
   verifyDeviceCertificate,
@@ -18,7 +17,6 @@ import {
 } from "./components/index.ts";
 
 export const Profile = () => {
-  const navigate = useNavigate();
   const {
     device,
     profile,
@@ -52,7 +50,7 @@ export const Profile = () => {
         <div className="max-w-md mx-auto text-center py-12 space-y-4">
           <p className="text-muted text-sm">No active device identity found.</p>
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => logout()}
             className="px-4 py-2 bg-tertiary text-tertiary-foreground rounded-xl text-xs font-semibold cursor-pointer"
           >
             Go to Onboarding
@@ -73,7 +71,6 @@ export const Profile = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
   };
 
   return (

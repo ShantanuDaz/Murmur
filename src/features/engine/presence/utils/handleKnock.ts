@@ -3,6 +3,7 @@ import {
   getContact,
   isContactBlocked,
   saveContact,
+  setContactHasConversation,
 } from "../../../../services/storage/contacts.ts";
 
 const SIGNAL_FRESHNESS_WINDOW_MS = 30_000;
@@ -27,7 +28,7 @@ export const handleKnock = async (signal: DoorbellSignal): Promise<void> => {
     return;
   }
 
-  // 3. Ensure contact record exists in local Dexie store
+  // 3. Ensure contact record exists in local Dexie store and hasConversation is true
   const existingContact = await getContact(accountId);
   if (!existingContact) {
     const now = Date.now();
@@ -36,14 +37,19 @@ export const handleKnock = async (signal: DoorbellSignal): Promise<void> => {
       : accountId.slice(0, 6);
 
     await saveContact({
-      accountId,
+      contactID: accountId,
       name: `User 0x${shortId}`,
-      avatar: null,
-      bio: null,
-      status: "accepted",
+      profile: {
+        name: `User 0x${shortId}`,
+        avatar: null,
+        bio: null,
+      },
+      hasConversation: true,
       createdAt: now,
       updatedAt: now,
     });
+  } else if (!existingContact.hasConversation) {
+    await setContactHasConversation(accountId, true);
   }
 
   console.log(`[Presence] ✅ Verified knock from: ${accountId}`);
