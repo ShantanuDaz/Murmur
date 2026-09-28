@@ -1,15 +1,15 @@
 import { useCopyToClipboard } from "../../../hooks/index.ts";
 import { Smartphone, Check, Copy, QrCode } from "lucide-react";
 
-interface MurmurNumberCardProps {
+interface LoopNumberCardProps {
   accountId: string;
   onShowQr: () => void;
 }
 
-export const MurmurNumberCard = ({
+export const LoopNumberCard = ({
   accountId,
   onShowQr,
-}: MurmurNumberCardProps) => {
+}: LoopNumberCardProps) => {
   const { copied, copy } = useCopyToClipboard();
 
   return (

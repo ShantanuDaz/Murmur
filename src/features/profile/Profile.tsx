@@ -6,7 +6,7 @@ import {
 } from "../../services/crypto/index.ts";
 import {
   ProfileHeader,
-  MurmurNumberCard,
+  LoopNumberCard,
   AppearanceCard,
   DeviceIdentityCard,
   RecoveryPhraseCard,
@@ -83,8 +83,8 @@ export const Profile = () => {
           onSaveProfile={handleSaveProfile}
         />
 
-        {/* 2. Sovereign Murmur Number / Account ID */}
-        <MurmurNumberCard
+        {/* 2. Sovereign Loop Number / Account ID */}
+        <LoopNumberCard
           accountId={device.accountId}
           onShowQr={() => setShowQrModal(true)}
         />

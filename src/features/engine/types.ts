@@ -8,7 +8,7 @@ export type MyRoomStatus =
   | "error";
 
 export interface ActivePeerConnection {
-  accountId: string; // Peer's Murmur Number (0x...)
+  accountId: string; // Peer's Loop Number (0x...)
   deviceId: string;
   trysteroPeerId: string; // Ephemeral WebRTC session ID from Trystero
   deviceName: string;
@@ -22,7 +22,7 @@ export type ActiveDeviceConnection = ActivePeerConnection;
 
 export interface HandshakePayload {
   device: DeviceIdentity;
-  targetAccountId: string; // Intended recipient's Murmur Number (prevents relay attacks)
+  targetAccountId: string; // Intended recipient's Loop Number (prevents relay attacks)
   timestamp: number; // Ephemeral epoch timestamp for freshness check
   nonce: string; // Random nonce for replay resistance
 }
@@ -33,14 +33,14 @@ export interface SignedHandshake {
 }
 
 export interface ConnectionProposal {
-  senderAccountId: string; // Murmur Number of requester (0x...)
+  senderAccountId: string; // Loop Number of requester (0x...)
   senderProfile: {
     name: string;
     avatar?: string | null;
     bio?: string | null;
   };
   senderDevice: DeviceIdentity; // Certified Device Identity
-  targetAccountId: string; // Murmur Number of recipient (anti-relay)
+  targetAccountId: string; // Loop Number of recipient (anti-relay)
   timestamp: number;
 }
 

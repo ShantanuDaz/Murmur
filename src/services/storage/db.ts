@@ -11,7 +11,7 @@ export class LoopDatabase extends Dexie {
   messages!: Table<Message, string>;
 
   constructor() {
-    super("MurmurDB");
+    super("LoopDB");
     this.version(1).stores({
       contacts: "accountId, status, createdAt, updatedAt",
       identity: "id, accountId",

@@ -27,7 +27,7 @@ export const SeedPhraseModal = ({
 
   const handleDownloadBackup = () => {
     const fileContent = `======================================================
-MURMUR SOVEREIGN IDENTITY BACKUP
+LOOP SOVEREIGN IDENTITY BACKUP
 ======================================================
 Master Account ID:
 ${accountId}

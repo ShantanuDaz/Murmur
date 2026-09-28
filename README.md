@@ -55,12 +55,12 @@
 
 ### 1. Identity & Certified Devices
 
-- **Master Identity**: Generated from a 12/24-word BIP-39 mnemonic phrase (`@scure/bip39`). Derives a Master Ed25519 keypair (`@noble/curves/ed25519`). The hexadecimal public key (`0x...`) is the user's permanent **Murmur Number**.
+- **Master Identity**: Generated from a 12/24-word BIP-39 mnemonic phrase (`@scure/bip39`). Derives a Master Ed25519 keypair (`@noble/curves/ed25519`). The hexadecimal public key (`0x...`) is the user's permanent **Loop Number**.
 - **Device Identity**: Every browser instance creates its own Ed25519 signing keypair and X25519 encryption keypair, certified by the Master Identity.
 
 ### 2. "My Room" (24/7 Personal Inbox)
 
-- Every authenticated user listens 24/7 on `Room(My_Murmur_Number)` via Nostr relays.
+- Every authenticated user listens 24/7 on `Room(My_Loop_Number)` via Nostr relays.
 - **Star-Topology Peer Filter**: Visitors in a room only talk to the room owner.
 - When an external peer connects, they exchange cryptographic Ed25519 device handshakes.
 - Upon verification, the peer's WebRTC channel is registered in `useConnectionStore` and routed directly to that user's chat.

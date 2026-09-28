@@ -2,7 +2,7 @@ import { db } from "./db.ts";
 
 export interface Room {
   roomId: string; // Primary Key: deterministic identifier (direct:0xAlice:0xBob)
-  peerAccountId: string; // Canonical Murmur Number of the contact
+  peerAccountId: string; // Canonical Loop Number of the contact
   lastMessageText?: string | null;
   lastMessageTimestamp?: number | null;
   unreadCount: number;
@@ -11,7 +11,7 @@ export interface Room {
 }
 
 /**
- * Computes a deterministic 1:1 direct room ID from two Murmur Numbers.
+ * Computes a deterministic 1:1 direct room ID from two Loop Numbers.
  * Guarantees identical roomId regardless of which participant calls it.
  */
 export const computeDirectRoomId = (

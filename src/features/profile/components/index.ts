@@ -1,5 +1,5 @@
 export * from "./ProfileHeader.tsx";
-export * from "./MurmurNumberCard.tsx";
+export * from "./LoopNumberCard.tsx";
 export * from "./DeviceIdentityCard.tsx";
 export * from "./RecoveryPhraseCard.tsx";
 export * from "./DangerZoneCard.tsx";
